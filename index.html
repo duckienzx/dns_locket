@@ -6,434 +6,184 @@
     <title>NextDNS VIP Config Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Fira Code', monospace;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Fira Code', monospace; -webkit-tap-highlight-color: transparent; }
+        body { min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #eef2f7; padding: 20px 12px; color: #24292e; position: relative; overflow-x: hidden; }
+        
+        .glow-bg-1 { position: absolute; top: 5%; left: 10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,107,107,0.4) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; filter: blur(60px); z-index: 1; }
+        .glow-bg-2 { position: absolute; bottom: 5%; right: 10%; width: 320px; height: 320px; background: radial-gradient(circle, rgba(72,219,251,0.4) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; filter: blur(60px); z-index: 1; }
+        
+        .mac-window { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(209, 213, 219, 0.8); border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08); width: 100%; max-width: 420px; overflow: hidden; }
+        .mac-header { background: rgba(240, 243, 246, 0.9); padding: 12px 16px; display: flex; align-items: center; border-bottom: 1px solid rgba(225, 228, 232, 0.8); position: relative; }
+        .mac-buttons { display: flex; gap: 8px; z-index: 2; }
+        .mac-btn { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .mac-btn.close { background: #ff5f56; } .mac-btn.minimize { background: #ffbd2e; } .mac-btn.maximize { background: #27c93f; }
+        .mac-title { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 600; color: #57606a; }
+        .mac-body { padding: 24px 20px; }
+        
+        .code-tag { display: inline-block; font-size: 11px; font-weight: 600; color: #0969da; background: #ddf4ff; padding: 4px 10px; border-radius: 6px; margin-bottom: 12px; }
+        h1 { font-size: 20px; font-weight: 700; color: #1f2328; margin-bottom: 6px; }
+        p.subtitle { font-size: 12px; color: #6e7781; margin-bottom: 20px; }
+        
+        .input-group { margin-bottom: 16px; text-align: left; }
+        .input-label { display: block; font-size: 12px; font-weight: 600; color: #24292e; margin-bottom: 6px; }
+        input { width: 100%; padding: 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 16px; outline: none; transition: border-color 0.2s; }
+        input:focus { border-color: #0969da; }
+        
+        .btn-submit { width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #0969da 0%, #2188ff 100%); color: #ffffff; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(9, 105, 218, 0.25); }
+        .btn-submit:disabled { background: #8cbaef; cursor: not-allowed; }
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #eef2f7;
-            padding: 20px 12px;
-            color: #24292e;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .glow-bg-1 {
-            position: absolute;
-            top: 5%;
-            left: 10%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,107,107,0.4) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-            filter: blur(60px);
-            z-index: 1;
-        }
-
-        .glow-bg-2 {
-            position: absolute;
-            bottom: 5%;
-            right: 10%;
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, rgba(72,219,251,0.4) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-            filter: blur(60px);
-            z-index: 1;
-        }
-
-        .glow-bg-3 {
-            position: absolute;
-            top: 40%;
-            right: 25%;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(254,202,87,0.35) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-            filter: blur(50px);
-            z-index: 1;
-        }
-
-        .mac-window {
-            position: relative;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(209, 213, 219, 0.8);
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 420px;
-            overflow: hidden;
-        }
-
-        .mac-header {
-            background: rgba(240, 243, 246, 0.9);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid rgba(225, 228, 232, 0.8);
-            position: relative;
-        }
-
-        .mac-buttons {
-            display: flex;
-            gap: 8px;
-            z-index: 2;
-        }
-
-        .mac-btn {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .mac-btn.close { background: #ff5f56; border: 0.5px solid #e0443e; }
-        .mac-btn.minimize { background: #ffbd2e; border: 0.5px solid #dea123; }
-        .mac-btn.maximize { background: #27c93f; border: 0.5px solid #1aab29; }
-
-        .mac-title {
-            position: absolute;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 600;
-            color: #57606a;
-            letter-spacing: -0.2px;
-        }
-
-        .mac-body {
-            padding: 24px 20px;
-        }
-
-        .code-tag {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 600;
-            color: #0969da;
-            background: #ddf4ff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid #54aefd40;
-            margin-bottom: 12px;
-        }
-
-        h1 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1f2328;
-            margin-bottom: 6px;
-        }
-
-        p.subtitle {
-            font-size: 12px;
-            color: #6e7781;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-            text-align: left;
-        }
-
-        .input-label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #24292e;
-            margin-bottom: 6px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            background: #ffffff;
-            border: 1.5px solid #d0d7de;
-            border-radius: 8px;
-            color: #1f2328;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.2s ease;
-            appearance: none;
-            -webkit-appearance: none;
-        }
-
-        input:focus {
-            border-color: #0969da;
-            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #0969da 0%, #2188ff 100%);
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(9, 105, 218, 0.25);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-submit:active {
-            transform: scale(0.98);
-            box-shadow: 0 2px 6px rgba(9, 105, 218, 0.2);
-        }
-
-        .btn-submit:disabled {
-            background: #8cbaef;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .progress-wrapper {
-            display: none;
-            margin-top: 16px;
-            text-align: left;
-            background: #f6f8fa;
-            border: 1px solid #d0d7de;
-            border-radius: 8px;
-            padding: 12px;
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            font-weight: 600;
-            color: #57606a;
-            margin-bottom: 6px;
-        }
-
-        .progress-bar-bg {
-            width: 100%;
-            height: 8px;
-            background: #e1e4e8;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #27c93f, #0969da);
-            border-radius: 4px;
-            transition: width 0.15s ease-in-out;
-        }
-
-        .progress-status {
-            font-size: 10px;
-            color: #0969da;
-            margin-top: 6px;
-            display: block;
-        }
-
-        .guide-section {
-            margin-top: 24px;
-            padding-top: 18px;
-            border-top: 1px dashed #d0d7de;
-            text-align: left;
-        }
-
-        .guide-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #1f2328;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .step-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .step-item {
-            background: #f6f8fa;
-            border: 1px solid #d0d7de;
-            border-radius: 8px;
-            padding: 10px 12px;
-        }
-
-        .step-text {
-            font-size: 12px;
-            color: #57606a;
-            line-height: 1.45;
-        }
-
-        .step-text b {
-            color: #0969da;
-        }
-
-        .step-img {
-            width: 100%;
-            border-radius: 6px;
-            border: 1px solid #d0d7de;
-            display: block;
-            margin-top: 8px;
-        }
-
-        .note-box {
-            margin-top: 12px;
-            background: #fff8c5;
-            border: 1px solid rgba(212, 167, 44, 0.4);
-            border-radius: 8px;
-            padding: 10px 12px;
-            font-size: 11.5px;
-            color: #7d4e00;
-            line-height: 1.45;
-        }
-
-        .note-box b {
-            color: #9a6700;
-        }
+        /* KHUNG HIỆN MÃ QR & TRẠNG THÁI DUYỆT */
+        .qr-section { display: none; margin-top: 15px; background: #ffffff; border: 1.5px solid #0969da; border-radius: 12px; padding: 16px; text-align: center; }
+        .qr-img { width: 210px; height: 210px; border-radius: 8px; border: 1px solid #e1e4e8; margin: 12px 0; }
+        
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #fff8c5; color: #9a6700; border: 1px solid #d4a72c; margin-bottom: 8px; }
+        .status-badge.approved { background: #dafbe1; color: #1a7f37; border-color: #2da44e; }
+        
+        .loader { display: inline-block; width: 12px; height: 12px; border: 2px solid #9a6700; border-radius: 50%; border-top-color: transparent; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .btn-download { display: none; width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #2ea44f 0%, #27c93f 100%); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 12px; box-shadow: 0 4px 12px rgba(39, 201, 63, 0.3); }
+        
+        .info-box { font-size: 11px; color: #24292e; text-align: left; background: #f6f8fa; padding: 10px; border-radius: 6px; line-height: 1.6; margin-top: 8px; border: 1px solid #d0d7de; }
     </style>
 </head>
 <body>
 
     <div class="glow-bg-1"></div>
     <div class="glow-bg-2"></div>
-    <div class="glow-bg-3"></div>
 
     <div class="mac-window">
         <div class="mac-header">
-            <div class="mac-buttons">
-                <span class="mac-btn close"></span>
-                <span class="mac-btn minimize"></span>
-                <span class="mac-btn maximize"></span>
-            </div>
+            <div class="mac-buttons"><span class="mac-btn close"></span><span class="mac-btn minimize"></span><span class="mac-btn maximize"></span></div>
             <div class="mac-title">generator.mobileconfig — zsh</div>
         </div>
 
         <div class="mac-body">
-            <span class="code-tag">const PROFILE_TYPE = "VIP";</span>
-            <h1>Tạo DNS Locket</h1>
-            <p class="subtitle">Khởi tạo profile mã hóa cho thiết bị iOS của bạn</p>
+            <span class="code-tag">STATUS = "CHECKOUT";</span>
+            <h1>Tạo DNS Locket VIP</h1>
+            <p class="subtitle">Khởi tạo profile mã hóa dành riêng cho thiết bị của bạn</p>
 
-            <div class="input-group">
-                <label class="input-label" for="username">$ enter_user_name:</label>
-                <input type="text" id="username" placeholder="Ví dụ: Huy..." autocomplete="off" autocapitalize="none">
+            <!-- FORM NHẬP TÊN -->
+            <div id="formSection">
+                <div class="input-group">
+                    <label class="input-label" for="username">$ enter_full_name:</label>
+                    <input type="text" id="username" placeholder="Ví dụ: Huy..." autocomplete="off">
+                </div>
+
+                <button class="btn-submit" id="btnSubmit" onclick="submitOrder()">
+                    <span>TẠO MÃ THANH TOÁN (VIETQR)</span>
+                </button>
             </div>
 
-            <button class="btn-submit" id="btnSubmit" onclick="generateProfile()">
-                <span>BUILD & DOWNLOAD (.mobileconfig)</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            </button>
-
-            <div class="progress-wrapper" id="progressWrapper">
-                <div class="progress-header">
-                    <span id="progressText">> Compiling XML profile...</span>
-                    <span id="progressPercent">0%</span>
+            <!-- KHU VỰC HIỆN MÃ QR & DUYỆT -->
+            <div class="qr-section" id="qrSection">
+                <div class="status-badge" id="statusBadge">
+                    <span class="loader" id="loader"></span> ĐANG CHỜ CHỦ WEB XÁC NHẬN...
                 </div>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="progressBarFill"></div>
-                </div>
-                <span class="progress-status" id="progressStatus">[1/3] Generating UUID identifiers...</span>
-            </div>
+                
+                <p style="font-size: 12px; color: #57606a;">Dùng app Ngân hàng quét mã QR để thanh toán:</p>
 
-            <div class="guide-section">
-                <div class="guide-title">
-                    📌 // GUIDE_INSTALL_IOS.md
+                <img src="" id="qrImage" class="qr-img" alt="Mã VietQR">
+
+                <div class="info-box">
+                    • <b>Nội dung CK:</b> <span id="ckContent" style="color: #0969da; font-weight: bold;">---</span><br>
+                    • <b>Số tiền:</b> <span style="color: #cf222e; font-weight: bold;">50.000 VNĐ</span>
                 </div>
 
-                <ol class="step-list">
-                    <li class="step-item">
-                        <div class="step-text"><b>STEP 01:</b> Nhập tên bấm <b>BUILD & DOWNLOAD</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
-                        <img src="https://via.placeholder.com/400x180/eef2f7/0969da?text=Step+1:+Tai+Profile+Bang+Safari" alt="Bước 1" class="step-img">
-                    </li>
-
-                    <li class="step-item">
-                        <div class="step-text"><b>STEP 02:</b> Vào ứng dụng <b>Cài đặt (Settings)</b> → Chọn mục <b>Đã tải về hồ sơ</b> ở góc trên.</div>
-                        <img src="https://via.placeholder.com/400x180/eef2f7/0969da?text=Step+2:+Mo+Cai+Dat+Chon+Ho+So" alt="Bước 2" class="step-img">
-                    </li>
-
-                    <li class="step-item">
-                        <div class="step-text"><b>STEP 03:</b> Bấm <b>Cài đặt (Install)</b> ở góc trên bên phải, nhập passCode và xác nhận.</div>
-                        <img src="https://via.placeholder.com/400x180/eef2f7/0969da?text=Step+3:+Xac+Nhan+Cai+Dat" alt="Bước 3" class="step-img">
-                    </li>
-                </ol>
-
-                <div class="note-box">
-                    <b>💡 SYSTEM_NOTE:</b> Cài đặt xong, hãy mở lại Locket hoặc bật/tắt lại kết nối Wi-Fi/4G để DNS kích hoạt tức thì.
-                </div>
+                <button class="btn-download" id="btnDownload" onclick="downloadConfig()">
+                    🚀 ĐÃ DUYỆT! BẤM TẢI PROFILE (.mobileconfig)
+                </button>
             </div>
         </div>
     </div>
 
 <script>
-function generateProfile() {
+let currentOrderId = '';
+let currentClientName = '';
+
+// ================= CẤU HÌNH NGÂN HÀNG CỦA BẠN =================
+const BANK_ID = "MB";             // Mã ngân hàng (MB, VCB, TCB, VPB, ICB...)
+const ACCOUNT_NO = "0123456789";   // Số tài khoản ngân hàng của bạn
+const ACCOUNT_NAME = "NGUYEN VAN A"; // Tên viết hoa không dấu của bạn
+const AMOUNT = 50000;              // Số tiền thanh toán (VNĐ)
+
+// LINK RENDER CỦA BẠN
+const SERVER_URL = "https://my-workspace-m.onrender.com"; 
+// =============================================================
+
+function submitOrder() {
     const nameInput = document.getElementById('username').value.trim();
     if (!nameInput) {
-        alert("Vui lòng nhập tên trước khi build profile!");
+        alert("Vui lòng nhập đầy đủ Họ và Tên!");
         return;
     }
 
     const btnSubmit = document.getElementById('btnSubmit');
-    const progressWrapper = document.getElementById('progressWrapper');
-    const progressBarFill = document.getElementById('progressBarFill');
-    const progressPercent = document.getElementById('progressPercent');
-    const progressStatus = document.getElementById('progressStatus');
-
     btnSubmit.disabled = true;
-    progressWrapper.style.display = 'block';
-    progressBarFill.style.width = '0%';
-    progressPercent.innerText = '0%';
+    btnSubmit.innerText = "ĐANG TẠO ĐƠN HÀNG...";
 
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-        currentProgress += Math.floor(Math.random() * 15) + 10;
+    currentClientName = nameInput;
 
-        if (currentProgress >= 100) {
-            currentProgress = 100;
-            clearInterval(interval);
+    // 1. Gửi dữ liệu về Server Render -> Báo Telegram
+    fetch(`${SERVER_URL}/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: nameInput })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            currentOrderId = data.order_id;
+            const memo = `LOCKET ${currentOrderId}`;
 
-            progressBarFill.style.width = '100%';
-            progressPercent.innerText = '100%';
-            progressStatus.innerText = '[3/3] Done! Downloading .mobileconfig...';
+            // 2. Tạo link VietQR tự động
+            const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${AMOUNT}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+            
+            document.getElementById('qrImage').src = qrUrl;
+            document.getElementById('ckContent').innerText = memo;
+            
+            // 3. Ẩn form nhập, hiện khung mã QR
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('qrSection').style.display = 'block';
 
-            setTimeout(() => {
-                downloadMobileConfig(nameInput);
-                btnSubmit.disabled = false;
-            }, 400);
-
+            // 4. Bắt đầu lắng nghe lệnh duyệt từ Telegram
+            startPolling();
         } else {
-            progressBarFill.style.width = currentProgress + '%';
-            progressPercent.innerText = currentProgress + '%';
-
-            if (currentProgress < 40) {
-                progressStatus.innerText = '[1/3] Generating UUID identifiers...';
-            } else if (currentProgress < 80) {
-                progressStatus.innerText = '[2/3] Injecting NextDNS payload rules...';
-            } else {
-                progressStatus.innerText = '[3/3] Finalizing configuration blob...';
-            }
+            alert("Lỗi: " + (data.message || "Không thể tạo đơn hàng"));
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
         }
-    }, 120);
+    })
+    .catch(err => {
+        alert("Không thể kết nối đến máy chủ! Hãy kiểm tra lại Server Render.");
+        btnSubmit.disabled = false;
+        btnSubmit.innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
+    });
 }
 
-function downloadMobileConfig(name) {
+// Kiểm tra trạng thái mỗi 2 giây
+function startPolling() {
+    const pollInterval = setInterval(() => {
+        fetch(`${SERVER_URL}/check-status/${currentOrderId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'APPROVED') {
+                clearInterval(pollInterval);
+                
+                // Cập nhật giao diện khi đã được duyệt
+                const badge = document.getElementById('statusBadge');
+                badge.className = 'status-badge approved';
+                badge.innerHTML = '✅ ĐÃ XÁC NHẬN CHUYỂN TIỀN THÀNH CÔNG!';
+                
+                document.getElementById('btnDownload').style.display = 'block';
+            }
+        })
+        .catch(err => console.log("Polling error..."));
+    }, 2000);
+}
+
+// Hàm tải file cấu hình .mobileconfig
+function downloadConfig() {
     const dnsId = "ed4988"; 
     const authorName = "DNS Huy Hiệu"; 
 
@@ -444,17 +194,14 @@ function downloadMobileConfig(name) {
         });
     }
 
-    const uuid1 = generateUUID();
-    const uuid2 = generateUUID();
-
     const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
     <key>PayloadDisplayName</key>
-    <string>NextDNS (${dnsId}) · ${name}</string>
+    <string>NextDNS (${dnsId}) · ${currentClientName}</string>
     <key>PayloadDescription</key>
-    <string>Cấu hình DNS Huy Hiệu dành cho tài khoản Locket ${name}.</string>
+    <string>Cấu hình DNS Huy Hiệu dành cho tài khoản Locket ${currentClientName}.</string>
     <key>PayloadIdentifier</key>
     <string>io.nextdns.${dnsId}.profile</string>
     <key>PayloadOrganization</key>
@@ -464,7 +211,7 @@ function downloadMobileConfig(name) {
     <key>PayloadType</key>
     <string>Configuration</string>
     <key>PayloadUUID</key>
-    <string>${uuid1}</string>
+    <string>${generateUUID()}</string>
     <key>PayloadVersion</key>
     <integer>1</integer>
     <key>PayloadContent</key>
@@ -475,7 +222,7 @@ function downloadMobileConfig(name) {
           <key>DNSProtocol</key>
           <string>HTTPS</string>
           <key>ServerURL</key>
-          <string>https://apple.dns.nextdns.io/${dnsId}/${name}</string>
+          <string>https://apple.dns.nextdns.io/${dnsId}/${encodeURIComponent(currentClientName)}</string>
         </dict>
         <key>OnDemandRules</key>
         <array>
@@ -510,9 +257,9 @@ function downloadMobileConfig(name) {
         <key>PayloadIdentifier</key>
         <string>io.nextdns.${dnsId}.profile.dnsSettings.managed</string>
         <key>PayloadUUID</key>
-        <string>${uuid2}</string>
+        <string>${generateUUID()}</string>
         <key>PayloadDisplayName</key>
-        <string>NextDNS (${dnsId}) · ${name}</string>
+        <string>NextDNS (${dnsId}) · ${currentClientName}</string>
         <key>PayloadOrganization</key>
         <string>${authorName}</string>
         <key>PayloadVersion</key>
@@ -525,7 +272,7 @@ function downloadMobileConfig(name) {
     const blob = new Blob([xmlContent], { type: 'application/x-apple-asymmetric-key-exchange' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `NextDNS_${dnsId}_${name}.mobileconfig`;
+    link.download = `NextDNS_${dnsId}_${currentClientName}.mobileconfig`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
