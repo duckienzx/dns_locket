@@ -32,9 +32,8 @@
         .btn-submit { width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #0969da 0%, #2188ff 100%); color: #ffffff; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(9, 105, 218, 0.25); }
         .btn-submit:disabled { background: #8cbaef; cursor: not-allowed; }
 
-        /* KHUNG HIỆN MÃ QR & TRẠNG THÁI DUYỆT */
         .qr-section { display: none; margin-top: 15px; background: #ffffff; border: 1.5px solid #0969da; border-radius: 12px; padding: 16px; text-align: center; }
-        .qr-img { width: 210px; height: 210px; border-radius: 8px; border: 1px solid #e1e4e8; margin: 12px 0; }
+        .qr-img { width: 220px; height: 220px; border-radius: 8px; border: 1px solid #e1e4e8; margin: 12px 0; }
         
         .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #fff8c5; color: #9a6700; border: 1px solid #d4a72c; margin-bottom: 8px; }
         .status-badge.approved { background: #dafbe1; color: #1a7f37; border-color: #2da44e; }
@@ -63,11 +62,10 @@
             <h1>Tạo DNS Locket VIP</h1>
             <p class="subtitle">Khởi tạo profile mã hóa dành riêng cho thiết bị của bạn</p>
 
-            <!-- FORM NHẬP TÊN -->
             <div id="formSection">
                 <div class="input-group">
                     <label class="input-label" for="username">$ enter_full_name:</label>
-                    <input type="text" id="username" placeholder="Ví dụ: Huy..." autocomplete="off">
+                    <input type="text" id="username" placeholder="Ví dụ: Kien..." autocomplete="off">
                 </div>
 
                 <button class="btn-submit" id="btnSubmit" onclick="submitOrder()">
@@ -75,17 +73,18 @@
                 </button>
             </div>
 
-            <!-- KHU VỰC HIỆN MÃ QR & DUYỆT -->
             <div class="qr-section" id="qrSection">
                 <div class="status-badge" id="statusBadge">
                     <span class="loader" id="loader"></span> ĐANG CHỜ CHỦ WEB XÁC NHẬN...
                 </div>
                 
-                <p style="font-size: 12px; color: #57606a;">Dùng app Ngân hàng quét mã QR để thanh toán:</p>
+                <p style="font-size: 12px; color: #57606a;">Quét mã QR bằng App Ngân hàng để chuyển khoản:</p>
 
-                <img src="" id="qrImage" class="qr-img" alt="Mã VietQR">
+                <img src="" id="qrImage" class="qr-img" alt="Mã VietQR BIDV">
 
                 <div class="info-box">
+                    • <b>Chủ TK:</b> ON DUC KIEN<br>
+                    • <b>Ngân hàng:</b> BIDV (8858349181)<br>
                     • <b>Nội dung CK:</b> <span id="ckContent" style="color: #0969da; font-weight: bold;">---</span><br>
                     • <b>Số tiền:</b> <span style="color: #cf222e; font-weight: bold;">50.000 VNĐ</span>
                 </div>
@@ -101,15 +100,14 @@
 let currentOrderId = '';
 let currentClientName = '';
 
-// ================= CẤU HÌNH NGÂN HÀNG CỦA BẠN =================
-const BANK_ID = "MB";             // Mã ngân hàng (MB, VCB, TCB, VPB, ICB...)
-const ACCOUNT_NO = "0123456789";   // Số tài khoản ngân hàng của bạn
-const ACCOUNT_NAME = "NGUYEN VAN A"; // Tên viết hoa không dấu của bạn
-const AMOUNT = 50000;              // Số tiền thanh toán (VNĐ)
+// ================= THÔNG TIN BIDV ĐÃ ĐƯỢC TÍCH HỢP =================
+const BANK_ID = "BIDV";             // Mã định danh BIDV chuẩn VietQR
+const ACCOUNT_NO = "8858349181";    // Số tài khoản BIDV của bạn
+const ACCOUNT_NAME = "ON DUC KIEN"; // Tên chủ tài khoản
+const AMOUNT = 50000;               // Số tiền thanh toán (VNĐ)
 
-// LINK RENDER CỦA BẠN
 const SERVER_URL = "https://my-workspace-m.onrender.com"; 
-// =============================================================
+// ===================================================================
 
 function submitOrder() {
     const nameInput = document.getElementById('username').value.trim();
@@ -124,7 +122,6 @@ function submitOrder() {
 
     currentClientName = nameInput;
 
-    // 1. Gửi dữ liệu về Server Render -> Báo Telegram
     fetch(`${SERVER_URL}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -136,17 +133,15 @@ function submitOrder() {
             currentOrderId = data.order_id;
             const memo = `LOCKET ${currentOrderId}`;
 
-            // 2. Tạo link VietQR tự động
+            // Tạo link VietQR dành riêng cho ngân hàng BIDV
             const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${AMOUNT}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
             
             document.getElementById('qrImage').src = qrUrl;
             document.getElementById('ckContent').innerText = memo;
             
-            // 3. Ẩn form nhập, hiện khung mã QR
             document.getElementById('formSection').style.display = 'none';
             document.getElementById('qrSection').style.display = 'block';
 
-            // 4. Bắt đầu lắng nghe lệnh duyệt từ Telegram
             startPolling();
         } else {
             alert("Lỗi: " + (data.message || "Không thể tạo đơn hàng"));
@@ -161,7 +156,6 @@ function submitOrder() {
     });
 }
 
-// Kiểm tra trạng thái mỗi 2 giây
 function startPolling() {
     const pollInterval = setInterval(() => {
         fetch(`${SERVER_URL}/check-status/${currentOrderId}`)
@@ -170,7 +164,6 @@ function startPolling() {
             if (data.status === 'APPROVED') {
                 clearInterval(pollInterval);
                 
-                // Cập nhật giao diện khi đã được duyệt
                 const badge = document.getElementById('statusBadge');
                 badge.className = 'status-badge approved';
                 badge.innerHTML = '✅ ĐÃ XÁC NHẬN CHUYỂN TIỀN THÀNH CÔNG!';
@@ -182,7 +175,6 @@ function startPolling() {
     }, 2000);
 }
 
-// Hàm tải file cấu hình .mobileconfig
 function downloadConfig() {
     const dnsId = "ed4988"; 
     const authorName = "DNS Huy Hiệu"; 
