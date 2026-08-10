@@ -29,17 +29,7 @@
         input { width: 100%; padding: 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 16px; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: #0969da; }
         
-        .price-tag-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f6f8fa;
-            border: 1px dashed #0969da;
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin-bottom: 16px;
-            font-size: 12px;
-        }
+        .price-tag-box { display: flex; justify-content: space-between; align-items: center; background: #f6f8fa; border: 1px dashed #0969da; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 12px; }
         .price-title { color: #57606a; font-weight: 600; }
         .price-amount { color: #cf222e; font-weight: 800; font-size: 15px; }
 
@@ -56,68 +46,18 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         
         .btn-download { display: none; width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #2ea44f 0%, #27c93f 100%); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 12px; box-shadow: 0 4px 12px rgba(39, 201, 63, 0.3); }
+        .btn-cancel { background: transparent; border: none; color: #cf222e; font-size: 11px; cursor: pointer; margin-top: 10px; text-decoration: underline; }
         
         .info-box { font-size: 11px; color: #24292e; text-align: left; background: #f6f8fa; padding: 10px; border-radius: 6px; line-height: 1.6; margin-top: 8px; border: 1px solid #d0d7de; }
 
-        /* HƯỚNG DẪN VÀ SYSTEM NOTE */
-        .guide-section {
-            margin-top: 24px;
-            padding-top: 18px;
-            border-top: 1px dashed #d0d7de;
-            text-align: left;
-        }
-
-        .guide-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #1f2328;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .step-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .step-item {
-            background: #f6f8fa;
-            border: 1px solid #d0d7de;
-            border-radius: 8px;
-            padding: 10px 12px;
-        }
-
-        .step-text {
-            font-size: 12px;
-            color: #57606a;
-            line-height: 1.45;
-        }
-
+        .guide-section { margin-top: 24px; padding-top: 18px; border-top: 1px dashed #d0d7de; text-align: left; }
+        .guide-title { font-size: 13px; font-weight: 700; color: #1f2328; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .step-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .step-item { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 8px; padding: 10px 12px; }
+        .step-text { font-size: 12px; color: #57606a; line-height: 1.45; }
         .step-text b { color: #0969da; }
-
-        .step-img {
-            width: 100%;
-            border-radius: 6px;
-            border: 1px solid #d0d7de;
-            display: block;
-            margin-top: 8px;
-        }
-
-        .note-box {
-            margin-top: 12px;
-            background: #fff8c5;
-            border: 1px solid rgba(212, 167, 44, 0.4);
-            border-radius: 8px;
-            padding: 10px 12px;
-            font-size: 11.5px;
-            color: #7d4e00;
-            line-height: 1.45;
-        }
-
+        .step-img { width: 100%; border-radius: 6px; border: 1px solid #d0d7de; display: block; margin-top: 8px; }
+        .note-box { margin-top: 12px; background: #fff8c5; border: 1px solid rgba(212, 167, 44, 0.4); border-radius: 8px; padding: 10px 12px; font-size: 11.5px; color: #7d4e00; line-height: 1.45; }
         .note-box b { color: #9a6700; }
     </style>
 </head>
@@ -172,30 +112,25 @@
                 <button class="btn-download" id="btnDownload" onclick="downloadConfig()">
                     🚀 ĐÃ DUYỆT! BẤM TẢI PROFILE (.mobileconfig)
                 </button>
+
+                <button class="btn-cancel" onclick="resetOrder()">Hủy đơn / Tạo lại</button>
             </div>
 
-            <!-- KHUNG HƯỚNG DẪN VÀ SYSTEM NOTE (ĐÃ KHÔI PHỤC) -->
             <div class="guide-section">
-                <div class="guide-title">
-                    📌 // GUIDE_INSTALL_IOS.md
-                </div>
-
+                <div class="guide-title">📌 // GUIDE_INSTALL_IOS.md</div>
                 <ol class="step-list">
                     <li class="step-item">
                         <div class="step-text"><b>STEP 01:</b> Nhập tên, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng trình duyệt <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
                         <img src="https://via.placeholder.com/400x150/eef2f7/0969da?text=Step+1:+Tai+Profile+Bang+Safari" alt="Bước 1" class="step-img">
                     </li>
-
                     <li class="step-item">
                         <div class="step-text"><b>STEP 02:</b> Vào ứng dụng <b>Cài đặt (Settings)</b> → Chọn mục <b>Đã tải về hồ sơ</b> ở góc trên.</div>
                         <img src="https://via.placeholder.com/400x150/eef2f7/0969da?text=Step+2:+Mo+Cai+Dat+Chon+Ho+So" alt="Bước 2" class="step-img">
                     </li>
-
                     <li class="step-item">
                         <div class="step-text"><b>STEP 03:</b> Bấm <b>Cài đặt (Install)</b> ở góc trên bên phải, nhập passCode và xác nhận.</div>
                     </li>
                 </ol>
-
                 <div class="note-box">
                     <b>💡 SYSTEM_NOTE:</b> Cài đặt xong, hãy mở lại Locket hoặc bật/tắt lại kết nối Wi-Fi/4G để DNS kích hoạt tức thì.
                 </div>
@@ -206,14 +141,36 @@
 <script>
 let currentOrderId = '';
 let currentClientName = '';
+let pollInterval = null;
 
 const BANK_ID = "BIDV";
 const ACCOUNT_NO = "8858349181";
 const ACCOUNT_NAME = "ON DUC KIEN";
 const AMOUNT = 15000;
+const EXPIRE_TIME_MINUTES = 15; // Thời gian hết hạn đơn hàng (15 phút)
 
-// Link Render chuẩn của bạn
 const SERVER_URL = "https://bot-dns.onrender.com"; 
+
+// --- NGUYÊN LÝ LƯU & TỰ ĐỘNG XÓA ĐƠN HÀNG KHI MỞ LẠI TRANG WEB ---
+window.addEventListener('DOMContentLoaded', () => {
+    const savedOrder = localStorage.getItem('dns_order');
+    if (savedOrder) {
+        const orderData = JSON.parse(savedOrder);
+        const now = new Date().getTime();
+        
+        // Kiểm tra xem đơn hàng đã quá 15 phút chưa
+        if (now - orderData.timestamp < EXPIRE_TIME_MINUTES * 60 * 1000) {
+            // Còn hạn -> Tự khôi phục lại màn hình QR Chuyển khoản
+            currentOrderId = orderData.order_id;
+            currentClientName = orderData.name;
+            showQrScreen(orderData.qrUrl, orderData.memo);
+            startPolling();
+        } else {
+            // Đã hết hạn -> Xóa bộ nhớ tạm và bắt nhập lại
+            localStorage.removeItem('dns_order');
+        }
+    }
+});
 
 function submitOrder() {
     const nameInput = document.getElementById('username').value.trim();
@@ -238,15 +195,19 @@ function submitOrder() {
         if (data.success) {
             currentOrderId = data.order_id;
             const memo = `LOCKET ${currentOrderId}`;
-
             const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${AMOUNT}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
             
-            document.getElementById('qrImage').src = qrUrl;
-            document.getElementById('ckContent').innerText = memo;
-            
-            document.getElementById('formSection').style.display = 'none';
-            document.getElementById('qrSection').style.display = 'block';
+            // Lưu dữ liệu vào Bộ nhớ trình duyệt (localStorage) kèm mốc thời gian
+            const orderData = {
+                order_id: currentOrderId,
+                name: currentClientName,
+                memo: memo,
+                qrUrl: qrUrl,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('dns_order', JSON.stringify(orderData));
 
+            showQrScreen(qrUrl, memo);
             startPolling();
         } else {
             alert("Lỗi: " + (data.message || "Không thể tạo đơn hàng"));
@@ -261,14 +222,26 @@ function submitOrder() {
     });
 }
 
+function showQrScreen(qrUrl, memo) {
+    document.getElementById('qrImage').src = qrUrl;
+    document.getElementById('ckContent').innerText = memo;
+    document.getElementById('formSection').style.display = 'none';
+    document.getElementById('qrSection').style.display = 'block';
+}
+
 function startPolling() {
-    const pollInterval = setInterval(() => {
+    if (pollInterval) clearInterval(pollInterval);
+    
+    pollInterval = setInterval(() => {
         fetch(`${SERVER_URL}/check-status/${currentOrderId}`)
         .then(res => res.json())
         .then(data => {
             if (data.status === 'APPROVED') {
                 clearInterval(pollInterval);
                 
+                // Khi đã được duyệt -> Xóa bộ nhớ tạm
+                localStorage.removeItem('dns_order');
+
                 const badge = document.getElementById('statusBadge');
                 badge.className = 'status-badge approved';
                 badge.innerHTML = '✅ ĐÃ XÁC NHẬN CHUYỂN TIỀN THÀNH CÔNG!';
@@ -280,9 +253,20 @@ function startPolling() {
     }, 2000);
 }
 
+function resetOrder() {
+    if (pollInterval) clearInterval(pollInterval);
+    localStorage.removeItem('dns_order');
+    document.getElementById('qrSection').style.display = 'none';
+    document.getElementById('formSection').style.display = 'block';
+    
+    const btnSubmit = document.getElementById('btnSubmit');
+    btnSubmit.disabled = false;
+    btnSubmit.innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
+}
+
 function downloadConfig() {
     const dnsId = "ed4988"; 
-    const authorName = "DNS Huy Hiệu"; 
+    const authorName = "DNS Locket"; 
 
     function generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
