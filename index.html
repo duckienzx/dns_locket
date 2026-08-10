@@ -24,11 +24,26 @@
         h1 { font-size: 20px; font-weight: 700; color: #1f2328; margin-bottom: 6px; }
         p.subtitle { font-size: 12px; color: #6e7781; margin-bottom: 20px; }
         
-        .input-group { margin-bottom: 16px; text-align: left; }
+        .input-group { margin-bottom: 12px; text-align: left; }
         .input-label { display: block; font-size: 12px; font-weight: 600; color: #24292e; margin-bottom: 6px; }
         input { width: 100%; padding: 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 16px; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: #0969da; }
         
+        /* KHUNG KHUYẾN MÃI / HIỂN THỊ GIÁ BÁN */
+        .price-tag-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f6f8fa;
+            border: 1px dashed #0969da;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            font-size: 12px;
+        }
+        .price-title { color: #57606a; font-weight: 600; }
+        .price-amount { color: #cf222e; font-weight: 800; font-size: 15px; }
+
         .btn-submit { width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #0969da 0%, #2188ff 100%); color: #ffffff; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(9, 105, 218, 0.25); }
         .btn-submit:disabled { background: #8cbaef; cursor: not-allowed; }
 
@@ -68,6 +83,12 @@
                     <input type="text" id="username" placeholder="Ví dụ: Kien..." autocomplete="off">
                 </div>
 
+                <!-- HIỂN THỊ GIÁ Ở TRÊN NÚT TẠO -->
+                <div class="price-tag-box">
+                    <span class="price-title">🏷️ Phí khởi tạo VIP:</span>
+                    <span class="price-amount">15.000 VNĐ</span>
+                </div>
+
                 <button class="btn-submit" id="btnSubmit" onclick="submitOrder()">
                     <span>TẠO MÃ THANH TOÁN (VIETQR)</span>
                 </button>
@@ -86,7 +107,7 @@
                     • <b>Chủ TK:</b> ON DUC KIEN<br>
                     • <b>Ngân hàng:</b> BIDV (8858349181)<br>
                     • <b>Nội dung CK:</b> <span id="ckContent" style="color: #0969da; font-weight: bold;">---</span><br>
-                    • <b>Số tiền:</b> <span style="color: #cf222e; font-weight: bold;">50.000 VNĐ</span>
+                    • <b>Số tiền:</b> <span style="color: #cf222e; font-weight: bold;">15.000 VNĐ</span>
                 </div>
 
                 <button class="btn-download" id="btnDownload" onclick="downloadConfig()">
@@ -100,14 +121,14 @@
 let currentOrderId = '';
 let currentClientName = '';
 
-// ================= THÔNG TIN BIDV ĐÃ ĐƯỢC TÍCH HỢP =================
-const BANK_ID = "BIDV";             // Mã định danh BIDV chuẩn VietQR
-const ACCOUNT_NO = "8858349181";    // Số tài khoản BIDV của bạn
-const ACCOUNT_NAME = "ON DUC KIEN"; // Tên chủ tài khoản
-const AMOUNT = 50000;               // Số tiền thanh toán (VNĐ)
+// ================= THÔNG TIN CẤU HÌNH BIDV =================
+const BANK_ID = "BIDV";
+const ACCOUNT_NO = "8858349181";
+const ACCOUNT_NAME = "ON DUC KIEN";
+const AMOUNT = 15000;
 
 const SERVER_URL = "https://my-workspace-m.onrender.com"; 
-// ===================================================================
+// ===========================================================
 
 function submitOrder() {
     const nameInput = document.getElementById('username').value.trim();
@@ -133,7 +154,6 @@ function submitOrder() {
             currentOrderId = data.order_id;
             const memo = `LOCKET ${currentOrderId}`;
 
-            // Tạo link VietQR dành riêng cho ngân hàng BIDV
             const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${AMOUNT}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
             
             document.getElementById('qrImage').src = qrUrl;
