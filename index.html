@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NextDNS Config Generator</title>
+    <title>NextDNS VIP Config Generator</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Fira Code', monospace; -webkit-tap-highlight-color: transparent; }
@@ -73,8 +73,8 @@
         </div>
 
         <div class="mac-body">
-            <span class="code-tag">STATUS = "ONLINE";</span>
-            <h1>Tạo DNS Locket</h1>
+            <span class="code-tag">STATUS = "CHECKOUT";</span>
+            <h1>Tạo DNS Locket VIP</h1>
             <p class="subtitle">Khởi tạo profile mã hóa dành riêng cho thiết bị của bạn</p>
 
             <div id="formSection">
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="price-tag-box">
-                    <span class="price-title">🏷️ Phí khởi tạo:</span>
+                    <span class="price-title">🏷️ Phí khởi tạo VIP:</span>
                     <span class="price-amount">15.000 VNĐ</span>
                 </div>
 
@@ -103,7 +103,7 @@
                 <img src="" id="qrImage" class="qr-img" alt="Mã VietQR BIDV">
 
                 <div class="info-box">
-                    • <b>Chủ TK:</b> ON DUC KIEN<br>
+                    • <b>Chủ TK:</b> DUC KIEN<br>
                     • <b>Ngân hàng:</b> BIDV (8858349181)<br>
                     • <b>Nội dung CK:</b> <span id="ckContent" style="color: #0969da; font-weight: bold;">---</span><br>
                     • <b>Số tiền:</b> <span style="color: #cf222e; font-weight: bold;">15.000 VNĐ</span>
@@ -145,28 +145,24 @@ let pollInterval = null;
 
 const BANK_ID = "BIDV";
 const ACCOUNT_NO = "8858349181";
-const ACCOUNT_NAME = "ON DUC KIEN";
+const ACCOUNT_NAME = "DUC KIEN"; // Cập nhật tên DUC KIEN
 const AMOUNT = 15000;
-const EXPIRE_TIME_MINUTES = 15; // Thời gian hết hạn đơn hàng (15 phút)
+const EXPIRE_TIME_MINUTES = 15;
 
 const SERVER_URL = "https://bot-dns.onrender.com"; 
 
-// --- NGUYÊN LÝ LƯU & TỰ ĐỘNG XÓA ĐƠN HÀNG KHI MỞ LẠI TRANG WEB ---
 window.addEventListener('DOMContentLoaded', () => {
     const savedOrder = localStorage.getItem('dns_order');
     if (savedOrder) {
         const orderData = JSON.parse(savedOrder);
         const now = new Date().getTime();
         
-        // Kiểm tra xem đơn hàng đã quá 15 phút chưa
         if (now - orderData.timestamp < EXPIRE_TIME_MINUTES * 60 * 1000) {
-            // Còn hạn -> Tự khôi phục lại màn hình QR Chuyển khoản
             currentOrderId = orderData.order_id;
             currentClientName = orderData.name;
             showQrScreen(orderData.qrUrl, orderData.memo);
             startPolling();
         } else {
-            // Đã hết hạn -> Xóa bộ nhớ tạm và bắt nhập lại
             localStorage.removeItem('dns_order');
         }
     }
@@ -197,7 +193,6 @@ function submitOrder() {
             const memo = `LOCKET ${currentOrderId}`;
             const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${AMOUNT}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
             
-            // Lưu dữ liệu vào Bộ nhớ trình duyệt (localStorage) kèm mốc thời gian
             const orderData = {
                 order_id: currentOrderId,
                 name: currentClientName,
@@ -238,8 +233,6 @@ function startPolling() {
         .then(data => {
             if (data.status === 'APPROVED') {
                 clearInterval(pollInterval);
-                
-                // Khi đã được duyệt -> Xóa bộ nhớ tạm
                 localStorage.removeItem('dns_order');
 
                 const badge = document.getElementById('statusBadge');
@@ -255,7 +248,18 @@ function startPolling() {
 
 function resetOrder() {
     if (pollInterval) clearInterval(pollInterval);
+    
+    if (currentOrderId) {
+        fetch(`${SERVER_URL}/cancel-order`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: currentOrderId })
+        }).catch(err => console.log("Lỗi gửi yêu cầu hủy"));
+    }
+
     localStorage.removeItem('dns_order');
+    currentOrderId = '';
+    
     document.getElementById('qrSection').style.display = 'none';
     document.getElementById('formSection').style.display = 'block';
     
@@ -266,7 +270,7 @@ function resetOrder() {
 
 function downloadConfig() {
     const dnsId = "ed4988"; 
-    const authorName = "DNS Locket"; 
+    const authorName = "DNS Huy Hiệu"; 
 
     function generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
