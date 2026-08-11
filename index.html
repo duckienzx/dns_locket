@@ -28,17 +28,12 @@
         .input-label { display: block; font-size: 12px; font-weight: 600; color: #24292e; margin-bottom: 6px; }
         input { width: 100%; padding: 12px 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 14px; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: #0969da; }
-        
-        .divider { display: flex; align-items: center; text-align: center; margin: 16px 0; color: #8c959f; font-size: 11px; font-weight: 600; }
-        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #d0d7de; }
-        .divider span { padding: 0 10px; }
 
         .price-tag-box { display: flex; justify-content: space-between; align-items: center; background: #f6f8fa; border: 1px dashed #0969da; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; }
         .price-title { color: #57606a; font-weight: 600; }
         .price-amount { color: #cf222e; font-weight: 800; font-size: 15px; }
 
         .btn-submit { width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #0969da 0%, #2188ff 100%); color: #ffffff; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(9, 105, 218, 0.25); }
-        .btn-key { background: linear-gradient(135deg, #2ea44f 0%, #27c93f 100%); box-shadow: 0 4px 12px rgba(39, 201, 63, 0.25); margin-top: 6px; }
         .btn-submit:disabled { background: #8cbaef; cursor: not-allowed; }
 
         .qr-section { display: none; margin-top: 15px; background: #ffffff; border: 1.5px solid #0969da; border-radius: 12px; padding: 16px; text-align: center; }
@@ -88,22 +83,14 @@
                     <input type="text" id="username" placeholder="Ví dụ: https://locket.cam/darwjen" autocomplete="off">
                 </div>
 
-                <!-- CÁCH 1: KHUNG NHẬP MÃ KEY VIP -->
-                <div class="input-group" style="margin-top: 16px;">
-                    <label class="input-label" for="vipKey" style="color: #1a7f37;">🔑 $ enter_vip_key (Nếu có):</label>
-                    <input type="text" id="vipKey" placeholder="Ví dụ: KIEN30" autocomplete="off" style="border-color: #2ea44f;">
+                <div class="input-group">
+                    <label class="input-label" for="vipKey" style="color: #2ea44f;">🔑 $ enter_vip_key (Không bắt buộc):</label>
+                    <input type="text" id="vipKey" placeholder="Ví dụ: VIP30" autocomplete="off" oninput="applyKey()">
                 </div>
 
-                <button class="btn-submit btn-key" id="btnUseKey" onclick="useVipKey()">
-                    <span>🚀 KÍCH HOẠT BẰNG KEY VIP</span>
-                </button>
-
-                <div class="divider"><span>HOẶC THANH TOÁN VIETQR</span></div>
-
-                <!-- CÁCH 2: QUÉT MÃ VIETQR -->
                 <div class="price-tag-box">
                     <span class="price-title">🏷️ Phí khởi tạo VIP:</span>
-                    <span class="price-amount">15.000 VNĐ</span>
+                    <span class="price-amount" id="displayPrice">15.000 VNĐ</span>
                 </div>
 
                 <button class="btn-submit" id="btnSubmit" onclick="submitOrder()">
@@ -116,15 +103,15 @@
                     <span class="loader" id="loader"></span> ĐANG CHỜ CHỦ WEB XÁC NHẬN...
                 </div>
                 
-                <p style="font-size: 12px; color: #57606a;">Quét mã QR bằng App Ngân hàng để chuyển khoản:</p>
+                <p style="font-size: 12px; color: #57606a;" id="qrNotice">Quét mã QR bằng App Ngân hàng để chuyển khoản:</p>
 
                 <img src="" id="qrImage" class="qr-img" alt="Mã VietQR BIDV">
 
-                <div class="info-box">
+                <div class="info-box" id="infoBox">
                     • <b>Chủ TK:</b> DUC KIEN<br>
                     • <b>Ngân hàng:</b> BIDV (8858349181)<br>
                     • <b>Nội dung CK:</b> <span id="ckContent" style="color: #0969da; font-weight: bold;">---</span><br>
-                    • <b>Số tiền:</b> <span style="color: #cf222e; font-weight: bold;">15.000 VNĐ</span>
+                    • <b>Số tiền:</b> <span id="ckAmount" style="color: #cf222e; font-weight: bold;">15.000 VNĐ</span>
                 </div>
 
                 <button class="btn-download" id="btnDownload" onclick="downloadConfig()">
@@ -138,7 +125,7 @@
                 <div class="guide-title">📌 // GUIDE_INSTALL_IOS.md</div>
                 <ol class="step-list">
                     <li class="step-item">
-                        <div class="step-text"><b>STEP 01:</b> Nhập link Locket/Username, kích hoạt bằng Key hoặc thanh toán QR rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
+                        <div class="step-text"><b>STEP 01:</b> Nhập link Locket/Username, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
                         <img src="https://via.placeholder.com/400x150/eef2f7/0969da?text=Step+1:+Tai+Profile+Bang+Safari" alt="Bước 1" class="step-img">
                     </li>
                     <li class="step-item">
@@ -159,12 +146,12 @@
 <script>
 let currentOrderId = '';
 let currentClientName = '';
+let currentPrice = 15000;
 let pollInterval = null;
 
 const BANK_ID = "BIDV";
 const ACCOUNT_NO = "8858349181";
 const ACCOUNT_NAME = "DUC KIEN";
-const AMOUNT = 15000;
 const EXPIRE_TIME_MINUTES = 15;
 
 const SERVER_URL = "https://bot-dns.onrender.com"; 
@@ -178,73 +165,33 @@ function extractUsername(input) {
     return parts[parts.length - 1];
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    const savedOrder = localStorage.getItem('dns_order');
-    if (savedOrder) {
-        const orderData = JSON.parse(savedOrder);
-        const now = new Date().getTime();
-        
-        if (now - orderData.timestamp < EXPIRE_TIME_MINUTES * 60 * 1000) {
-            currentOrderId = orderData.order_id;
-            currentClientName = orderData.name;
-            showQrScreen(orderData.qrUrl, orderData.memo);
-            startPolling();
-        } else {
-            localStorage.removeItem('dns_order');
-        }
-    }
-});
-
-// HÀM XỬ LÝ NHẬP MÃ VIP KEY
-function useVipKey() {
-    const rawUser = document.getElementById('username').value.trim();
+// Hàm tự động áp dụng Key khi nhập
+function applyKey() {
     const rawKey = document.getElementById('vipKey').value.trim();
-
-    if (!rawUser) {
-        alert("Vui lòng nhập Link Locket hoặc Username!");
-        return;
-    }
     if (!rawKey) {
-        alert("Vui lòng nhập Mã VIP Key!");
+        currentPrice = 15000;
+        document.getElementById('displayPrice').innerText = "15.000 VNĐ";
+        document.getElementById('btnSubmit').querySelector('span').innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
         return;
     }
 
-    const extractedUser = extractUsername(rawUser);
-    const btnKey = document.getElementById('btnUseKey');
-    btnKey.disabled = true;
-    btnKey.innerText = "ĐANG KIỂM TRA KEY...";
-
-    fetch(`${SERVER_URL}/use-key`, {
+    fetch(`${SERVER_URL}/check-key`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: rawKey, username: extractedUser })
+        body: JSON.stringify({ key: rawKey })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            currentClientName = extractedUser;
-            alert(`🎉 Kích hoạt Key thành công! Thời hạn: ${data.days} ngày (Hết hạn: ${data.expire_at})`);
+            currentPrice = data.price;
+            document.getElementById('displayPrice').innerText = `${data.price.toLocaleString('vi-VN')} VNĐ (${data.days} ngày)`;
             
-            // Hiển thị nút tải file trực tiếp
-            document.getElementById('formSection').style.display = 'none';
-            document.getElementById('qrSection').style.display = 'block';
-            
-            const badge = document.getElementById('statusBadge');
-            badge.className = 'status-badge approved';
-            badge.innerHTML = '✅ KÍCH HOẠT THÀNH CÔNG BẰNG KEY VIP!';
-            
-            document.getElementById('qrImage').style.display = 'none';
-            document.getElementById('btnDownload').style.display = 'block';
-        } else {
-            alert("Lỗi: " + (data.message || "Mã Key không hợp lệ!"));
-            btnKey.disabled = false;
-            btnKey.innerText = "🚀 KÍCH HOẠT BẰNG KEY VIP";
+            if (data.price === 0) {
+                document.getElementById('btnSubmit').querySelector('span').innerText = "🚀 KÍCH HOẠT MIỄN PHÍ NGAY";
+            } else {
+                document.getElementById('btnSubmit').querySelector('span').innerText = `TẠO MÃ THANH TOÁN (${data.price.toLocaleString('vi-VN')}đ)`;
+            }
         }
-    })
-    .catch(err => {
-        alert("Không thể kết nối máy chủ! Hãy kiểm tra lại Server Render.");
-        btnKey.disabled = false;
-        btnKey.innerText = "🚀 KÍCH HOẠT BẰNG KEY VIP";
     });
 }
 
@@ -256,46 +203,51 @@ function submitOrder() {
     }
 
     const extractedUser = extractUsername(rawInput);
+    currentClientName = extractedUser;
+
+    // Nếu Key 0đ -> Cho tải file trực tiếp luôn
+    if (currentPrice === 0) {
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('qrSection').style.display = 'block';
+        
+        const badge = document.getElementById('statusBadge');
+        badge.className = 'status-badge approved';
+        badge.innerHTML = '✅ KÍCH HOẠT THÀNH CÔNG BẰNG KEY FREE!';
+        
+        document.getElementById('qrNotice').style.display = 'none';
+        document.getElementById('qrImage').style.display = 'none';
+        document.getElementById('infoBox').style.display = 'none';
+        document.getElementById('btnDownload').style.display = 'block';
+        return;
+    }
 
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = true;
-    btnSubmit.innerText = "ĐANG TẠO ĐƠN HÀNG...";
-
-    currentClientName = extractedUser;
 
     fetch(`${SERVER_URL}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: extractedUser })
+        body: JSON.stringify({ name: extractedUser, amount: currentPrice })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
             currentOrderId = data.order_id;
             const memo = `LOCKET ${currentOrderId}`;
-            const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${AMOUNT}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+            const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${currentPrice}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
             
-            const orderData = {
-                order_id: currentOrderId,
-                name: currentClientName,
-                memo: memo,
-                qrUrl: qrUrl,
-                timestamp: new Date().getTime()
-            };
-            localStorage.setItem('dns_order', JSON.stringify(orderData));
+            document.getElementById('ckAmount').innerText = `${currentPrice.toLocaleString('vi-VN')} VNĐ`;
 
             showQrScreen(qrUrl, memo);
             startPolling();
         } else {
             alert("Lỗi: " + (data.message || "Không thể tạo đơn hàng"));
             btnSubmit.disabled = false;
-            btnSubmit.innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
         }
     })
     .catch(err => {
-        alert("Không thể kết nối đến máy chủ! Hãy kiểm tra lại Server Render.");
+        alert("Không thể kết nối đến máy chủ!");
         btnSubmit.disabled = false;
-        btnSubmit.innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
     });
 }
 
@@ -315,7 +267,6 @@ function startPolling() {
         .then(data => {
             if (data.status === 'APPROVED') {
                 clearInterval(pollInterval);
-                localStorage.removeItem('dns_order');
 
                 const badge = document.getElementById('statusBadge');
                 badge.className = 'status-badge approved';
@@ -339,7 +290,6 @@ function resetOrder() {
         }).catch(err => console.log("Lỗi gửi yêu cầu hủy"));
     }
 
-    localStorage.removeItem('dns_order');
     currentOrderId = '';
     
     document.getElementById('qrSection').style.display = 'none';
@@ -347,7 +297,6 @@ function resetOrder() {
     
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = false;
-    btnSubmit.innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
 }
 
 function downloadConfig() {
