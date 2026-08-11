@@ -26,7 +26,7 @@
         
         .input-group { margin-bottom: 12px; text-align: left; }
         .input-label { display: block; font-size: 12px; font-weight: 600; color: #24292e; margin-bottom: 6px; }
-        input { width: 100%; padding: 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 16px; outline: none; transition: border-color 0.2s; }
+        input { width: 100%; padding: 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 15px; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: #0969da; }
         
         .price-tag-box { display: flex; justify-content: space-between; align-items: center; background: #f6f8fa; border: 1px dashed #0969da; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 12px; }
@@ -79,8 +79,8 @@
 
             <div id="formSection">
                 <div class="input-group">
-                    <label class="input-label" for="username">$ enter_full_name:</label>
-                    <input type="text" id="username" placeholder="Ví dụ: Kien..." autocomplete="off">
+                    <label class="input-label" for="username">$ enter_locket_link_or_username:</label>
+                    <input type="text" id="username" placeholder="Ví dụ: https://locket.cam/darwjen" autocomplete="off">
                 </div>
 
                 <div class="price-tag-box">
@@ -120,7 +120,7 @@
                 <div class="guide-title">📌 // GUIDE_INSTALL_IOS.md</div>
                 <ol class="step-list">
                     <li class="step-item">
-                        <div class="step-text"><b>STEP 01:</b> Nhập tên, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng trình duyệt <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
+                        <div class="step-text"><b>STEP 01:</b> Nhập link Locket hoặc Username, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
                         <img src="https://via.placeholder.com/400x150/eef2f7/0969da?text=Step+1:+Tai+Profile+Bang+Safari" alt="Bước 1" class="step-img">
                     </li>
                     <li class="step-item">
@@ -145,11 +145,20 @@ let pollInterval = null;
 
 const BANK_ID = "BIDV";
 const ACCOUNT_NO = "8858349181";
-const ACCOUNT_NAME = "DUC KIEN"; // Cập nhật tên DUC KIEN
+const ACCOUNT_NAME = "DUC KIEN";
 const AMOUNT = 15000;
 const EXPIRE_TIME_MINUTES = 15;
 
 const SERVER_URL = "https://bot-dns.onrender.com"; 
+
+function extractUsername(input) {
+    let cleanStr = input.trim();
+    if (cleanStr.endsWith('/')) {
+        cleanStr = cleanStr.slice(0, -1);
+    }
+    const parts = cleanStr.split('/');
+    return parts[parts.length - 1];
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     const savedOrder = localStorage.getItem('dns_order');
@@ -169,22 +178,24 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function submitOrder() {
-    const nameInput = document.getElementById('username').value.trim();
-    if (!nameInput) {
-        alert("Vui lòng nhập đầy đủ Họ và Tên!");
+    const rawInput = document.getElementById('username').value.trim();
+    if (!rawInput) {
+        alert("Vui lòng nhập Link Locket hoặc Username!");
         return;
     }
+
+    const extractedUser = extractUsername(rawInput);
 
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = true;
     btnSubmit.innerText = "ĐANG TẠO ĐƠN HÀNG...";
 
-    currentClientName = nameInput;
+    currentClientName = extractedUser;
 
     fetch(`${SERVER_URL}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: nameInput })
+        body: JSON.stringify({ name: extractedUser })
     })
     .then(res => res.json())
     .then(data => {
@@ -270,7 +281,7 @@ function resetOrder() {
 
 function downloadConfig() {
     const dnsId = "ed4988"; 
-    const authorName = "DNS Huy Hiệu"; 
+    const authorName = "Duc Kien"; // Tên nhà phát triển
 
     function generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -286,7 +297,7 @@ function downloadConfig() {
     <key>PayloadDisplayName</key>
     <string>NextDNS (${dnsId}) · ${currentClientName}</string>
     <key>PayloadDescription</key>
-    <string>Cấu hình DNS Huy Hiệu dành cho tài khoản Locket ${currentClientName}.</string>
+    <string>Cấu hình DNS VIP dành cho tài khoản Locket ${currentClientName}. Được tạo bởi Duc Kien.</string>
     <key>PayloadIdentifier</key>
     <string>io.nextdns.${dnsId}.profile</string>
     <key>PayloadOrganization</key>
