@@ -152,9 +152,13 @@ let pollInterval = null;
 const BANK_ID = "BIDV";
 const ACCOUNT_NO = "8858349181";
 const ACCOUNT_NAME = "DUC KIEN";
-const EXPIRE_TIME_MINUTES = 15;
 
 const SERVER_URL = "https://bot-dns.onrender.com"; 
+
+// BẮT SỰ KIỆN NẾU TRÌNH DUYỆT QUAY LẠI CŨ (BACK PAGE/PAGESHOW CACHE)
+window.addEventListener('pageshow', function(event) {
+    resetOrder();
+});
 
 function extractUsername(input) {
     let cleanStr = input.trim();
@@ -279,6 +283,7 @@ function startPolling() {
     }, 2000);
 }
 
+// HÀM RESET SẠCH DỮ LIỆU KHI KHÁCH QUAY LẠI TRANG
 function resetOrder() {
     if (pollInterval) clearInterval(pollInterval);
     
@@ -291,12 +296,21 @@ function resetOrder() {
     }
 
     currentOrderId = '';
+    currentPrice = 15000;
     
+    // Xóa trắng các ô nhập
+    document.getElementById('username').value = '';
+    document.getElementById('vipKey').value = '';
+    document.getElementById('displayPrice').innerText = "15.000 VNĐ";
+
+    // Khôi phục giao diện màn hình chính
     document.getElementById('qrSection').style.display = 'none';
+    document.getElementById('btnDownload').style.display = 'none';
     document.getElementById('formSection').style.display = 'block';
     
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = false;
+    btnSubmit.querySelector('span').innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
 }
 
 function downloadConfig() {
@@ -318,7 +332,6 @@ function downloadConfig() {
     const selectedDnsId = dnsList[Math.floor(Math.random() * dnsList.length)];
 
     if (selectedDnsId === "ed4988") {
-        // Tải file tự tạo theo cách cũ dành riêng cho ID ed4988
         const authorName = "Duc Kien DNS";
 
         function generateUUID() {
@@ -411,9 +424,13 @@ function downloadConfig() {
         link.click();
         document.body.removeChild(link);
     } else {
-        // Tải file đã ký số chính thức trực tiếp từ NextDNS dành cho 9 link mới
         window.location.href = `https://apple.nextdns.io/NextDNS%20(${selectedDnsId}).mobileconfig?sign=1`;
     }
+
+    // TẢI XONG TỰ ĐỘNG RESET TRANG VỀ BAN ĐẦU SAU 3 GIÂY
+    setTimeout(() => {
+        resetOrder();
+    }, 3000);
 }
 </script>
 
