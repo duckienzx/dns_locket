@@ -300,26 +300,44 @@ function resetOrder() {
 }
 
 function downloadConfig() {
-    const dnsId = "ed4988"; 
-    const authorName = "Duc Kien DNS";
+    // Danh sách 10 ID NextDNS (9 link ký số + 1 DNS cũ "ed4988")
+    const dnsList = [
+        "ed4988",
+        "c46c6d",
+        "ab98f6",
+        "1f7766",
+        "8ae476",
+        "58a9ef",
+        "1b3dec",
+        "e8caf2",
+        "ba82d8",
+        "de8631"
+    ];
 
-    function generateUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16).toUpperCase();
-        });
-    }
+    // Xoay vòng ngẫu nhiên 1 trong 10 ID để chia đều lượt tải
+    const selectedDnsId = dnsList[Math.floor(Math.random() * dnsList.length)];
 
-    const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+    if (selectedDnsId === "ed4988") {
+        // Tải file tự tạo theo cách cũ dành riêng cho ID ed4988
+        const authorName = "Duc Kien DNS";
+
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16).toUpperCase();
+            });
+        }
+
+        const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
     <key>PayloadDisplayName</key>
-    <string>NextDNS (${dnsId}) · ${currentClientName}</string>
+    <string>NextDNS (${selectedDnsId}) · ${currentClientName}</string>
     <key>PayloadDescription</key>
     <string>Cấu hình DNS VIP dành cho tài khoản Locket ${currentClientName}. Được phát triển &amp; vận hành bởi Duc Kien.</string>
     <key>PayloadIdentifier</key>
-    <string>io.nextdns.${dnsId}.profile</string>
+    <string>io.nextdns.${selectedDnsId}.profile</string>
     <key>PayloadOrganization</key>
     <string>${authorName}</string>
     <key>PayloadScope</key>
@@ -338,7 +356,7 @@ function downloadConfig() {
           <key>DNSProtocol</key>
           <string>HTTPS</string>
           <key>ServerURL</key>
-          <string>https://apple.dns.nextdns.io/${dnsId}/${encodeURIComponent(currentClientName)}</string>
+          <string>https://apple.dns.nextdns.io/${selectedDnsId}/${encodeURIComponent(currentClientName)}</string>
         </dict>
         <key>OnDemandRules</key>
         <array>
@@ -371,11 +389,11 @@ function downloadConfig() {
         <key>PayloadType</key>
         <string>com.apple.dnsSettings.managed</string>
         <key>PayloadIdentifier</key>
-        <string>io.nextdns.${dnsId}.profile.dnsSettings.managed</string>
+        <string>io.nextdns.${selectedDnsId}.profile.dnsSettings.managed</string>
         <key>PayloadUUID</key>
         <string>${generateUUID()}</string>
         <key>PayloadDisplayName</key>
-        <string>NextDNS (${dnsId}) · ${currentClientName}</string>
+        <string>NextDNS (${selectedDnsId}) · ${currentClientName}</string>
         <key>PayloadOrganization</key>
         <string>${authorName}</string>
         <key>PayloadVersion</key>
@@ -385,13 +403,17 @@ function downloadConfig() {
   </dict>
 </plist>`;
 
-    const blob = new Blob([xmlContent], { type: 'application/x-apple-asymmetric-key-exchange' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `NextDNS_${dnsId}_${currentClientName}.mobileconfig`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+        const blob = new Blob([xmlContent], { type: 'application/x-apple-asymmetric-key-exchange' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `NextDNS_${selectedDnsId}_${currentClientName}.mobileconfig`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else {
+        // Tải file đã ký số chính thức trực tiếp từ NextDNS dành cho 9 link mới
+        window.location.href = `https://apple.nextdns.io/NextDNS%20(${selectedDnsId}).mobileconfig?sign=1`;
+    }
 }
 </script>
 
