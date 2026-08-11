@@ -26,14 +26,19 @@
         
         .input-group { margin-bottom: 12px; text-align: left; }
         .input-label { display: block; font-size: 12px; font-weight: 600; color: #24292e; margin-bottom: 6px; }
-        input { width: 100%; padding: 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 15px; outline: none; transition: border-color 0.2s; }
+        input { width: 100%; padding: 12px 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 14px; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: #0969da; }
         
-        .price-tag-box { display: flex; justify-content: space-between; align-items: center; background: #f6f8fa; border: 1px dashed #0969da; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; font-size: 12px; }
+        .divider { display: flex; align-items: center; text-align: center; margin: 16px 0; color: #8c959f; font-size: 11px; font-weight: 600; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #d0d7de; }
+        .divider span { padding: 0 10px; }
+
+        .price-tag-box { display: flex; justify-content: space-between; align-items: center; background: #f6f8fa; border: 1px dashed #0969da; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; }
         .price-title { color: #57606a; font-weight: 600; }
         .price-amount { color: #cf222e; font-weight: 800; font-size: 15px; }
 
         .btn-submit { width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #0969da 0%, #2188ff 100%); color: #ffffff; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(9, 105, 218, 0.25); }
+        .btn-key { background: linear-gradient(135deg, #2ea44f 0%, #27c93f 100%); box-shadow: 0 4px 12px rgba(39, 201, 63, 0.25); margin-top: 6px; }
         .btn-submit:disabled { background: #8cbaef; cursor: not-allowed; }
 
         .qr-section { display: none; margin-top: 15px; background: #ffffff; border: 1.5px solid #0969da; border-radius: 12px; padding: 16px; text-align: center; }
@@ -83,6 +88,19 @@
                     <input type="text" id="username" placeholder="Ví dụ: https://locket.cam/darwjen" autocomplete="off">
                 </div>
 
+                <!-- CÁCH 1: KHUNG NHẬP MÃ KEY VIP -->
+                <div class="input-group" style="margin-top: 16px;">
+                    <label class="input-label" for="vipKey" style="color: #1a7f37;">🔑 $ enter_vip_key (Nếu có):</label>
+                    <input type="text" id="vipKey" placeholder="Ví dụ: KIEN30" autocomplete="off" style="border-color: #2ea44f;">
+                </div>
+
+                <button class="btn-submit btn-key" id="btnUseKey" onclick="useVipKey()">
+                    <span>🚀 KÍCH HOẠT BẰNG KEY VIP</span>
+                </button>
+
+                <div class="divider"><span>HOẶC THANH TOÁN VIETQR</span></div>
+
+                <!-- CÁCH 2: QUÉT MÃ VIETQR -->
                 <div class="price-tag-box">
                     <span class="price-title">🏷️ Phí khởi tạo VIP:</span>
                     <span class="price-amount">15.000 VNĐ</span>
@@ -120,7 +138,7 @@
                 <div class="guide-title">📌 // GUIDE_INSTALL_IOS.md</div>
                 <ol class="step-list">
                     <li class="step-item">
-                        <div class="step-text"><b>STEP 01:</b> Nhập link Locket hoặc Username, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
+                        <div class="step-text"><b>STEP 01:</b> Nhập link Locket/Username, kích hoạt bằng Key hoặc thanh toán QR rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
                         <img src="https://via.placeholder.com/400x150/eef2f7/0969da?text=Step+1:+Tai+Profile+Bang+Safari" alt="Bước 1" class="step-img">
                     </li>
                     <li class="step-item">
@@ -176,6 +194,59 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// HÀM XỬ LÝ NHẬP MÃ VIP KEY
+function useVipKey() {
+    const rawUser = document.getElementById('username').value.trim();
+    const rawKey = document.getElementById('vipKey').value.trim();
+
+    if (!rawUser) {
+        alert("Vui lòng nhập Link Locket hoặc Username!");
+        return;
+    }
+    if (!rawKey) {
+        alert("Vui lòng nhập Mã VIP Key!");
+        return;
+    }
+
+    const extractedUser = extractUsername(rawUser);
+    const btnKey = document.getElementById('btnUseKey');
+    btnKey.disabled = true;
+    btnKey.innerText = "ĐANG KIỂM TRA KEY...";
+
+    fetch(`${SERVER_URL}/use-key`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: rawKey, username: extractedUser })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            currentClientName = extractedUser;
+            alert(`🎉 Kích hoạt Key thành công! Thời hạn: ${data.days} ngày (Hết hạn: ${data.expire_at})`);
+            
+            // Hiển thị nút tải file trực tiếp
+            document.getElementById('formSection').style.display = 'none';
+            document.getElementById('qrSection').style.display = 'block';
+            
+            const badge = document.getElementById('statusBadge');
+            badge.className = 'status-badge approved';
+            badge.innerHTML = '✅ KÍCH HOẠT THÀNH CÔNG BẰNG KEY VIP!';
+            
+            document.getElementById('qrImage').style.display = 'none';
+            document.getElementById('btnDownload').style.display = 'block';
+        } else {
+            alert("Lỗi: " + (data.message || "Mã Key không hợp lệ!"));
+            btnKey.disabled = false;
+            btnKey.innerText = "🚀 KÍCH HOẠT BẰNG KEY VIP";
+        }
+    })
+    .catch(err => {
+        alert("Không thể kết nối máy chủ! Hãy kiểm tra lại Server Render.");
+        btnKey.disabled = false;
+        btnKey.innerText = "🚀 KÍCH HOẠT BẰNG KEY VIP";
+    });
+}
 
 function submitOrder() {
     const rawInput = document.getElementById('username').value.trim();
@@ -281,7 +352,7 @@ function resetOrder() {
 
 function downloadConfig() {
     const dnsId = "ed4988"; 
-    const authorName = "Duc Kien"; // Tên nhà phát triển
+    const authorName = "Duc Kien DNS";
 
     function generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -297,7 +368,7 @@ function downloadConfig() {
     <key>PayloadDisplayName</key>
     <string>NextDNS (${dnsId}) · ${currentClientName}</string>
     <key>PayloadDescription</key>
-    <string>Cấu hình DNS VIP dành cho tài khoản Locket ${currentClientName}. Được tạo bởi Duc Kien.</string>
+    <string>Cấu hình DNS VIP dành cho tài khoản Locket ${currentClientName}. Được phát triển &amp; vận hành bởi Duc Kien.</string>
     <key>PayloadIdentifier</key>
     <string>io.nextdns.${dnsId}.profile</string>
     <key>PayloadOrganization</key>
