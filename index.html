@@ -79,8 +79,8 @@
 
             <div id="formSection">
                 <div class="input-group">
-                    <label class="input-label" for="username">$ enter_locket_link_or_username:</label>
-                    <input type="text" id="username" placeholder="Ví dụ: https://locket.cam/darwjen" autocomplete="off">
+                    <label class="input-label" for="username" style="color: #cf222e;">$ enter_locket_link (Bắt buộc):</label>
+                    <input type="text" id="username" placeholder="Vd: https://locket.cam/darwjen" autocomplete="off">
                 </div>
 
                 <div class="input-group">
@@ -125,7 +125,7 @@
                 <div class="guide-title">📌 // GUIDE_INSTALL_IOS.md</div>
                 <ol class="step-list">
                     <li class="step-item">
-                        <div class="step-text"><b>STEP 01:</b> Nhập link Locket/Username, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
+                        <div class="step-text"><b>STEP 01:</b> Nhập chính xác link Locket, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
                         <img src="https://via.placeholder.com/400x150/eef2f7/0969da?text=Step+1:+Tai+Profile+Bang+Safari" alt="Bước 1" class="step-img">
                     </li>
                     <li class="step-item">
@@ -146,6 +146,7 @@
 <script>
 let currentOrderId = '';
 let currentClientName = '';
+let currentFullLink = '';
 let currentPrice = 15000;
 let pollInterval = null;
 
@@ -155,7 +156,6 @@ const ACCOUNT_NAME = "DUC KIEN";
 
 const SERVER_URL = "https://bot-dns.onrender.com"; 
 
-// BẮT SỰ KIỆN NẾU TRÌNH DUYỆT QUAY LẠI CŨ (BACK PAGE/PAGESHOW CACHE)
 window.addEventListener('pageshow', function(event) {
     resetOrder();
 });
@@ -169,7 +169,6 @@ function extractUsername(input) {
     return parts[parts.length - 1];
 }
 
-// Hàm tự động áp dụng Key khi nhập
 function applyKey() {
     const rawKey = document.getElementById('vipKey').value.trim();
     if (!rawKey) {
@@ -200,16 +199,18 @@ function applyKey() {
 }
 
 function submitOrder() {
-    const rawInput = document.getElementById('username').value.trim();
-    if (!rawInput) {
-        alert("Vui lòng nhập Link Locket hoặc Username!");
+    const rawInput = document.getElementById('username').value.trim().toLowerCase();
+    
+    // Bắt buộc phải có chữ locket.cam trong ô nhập
+    if (!rawInput.includes("locket.cam/")) {
+        alert("Vui lòng dán chính xác Link Locket cá nhân của bạn (Bắt đầu bằng https://locket.cam/...)!");
         return;
     }
 
+    currentFullLink = document.getElementById('username').value.trim();
     const extractedUser = extractUsername(rawInput);
     currentClientName = extractedUser;
 
-    // Nếu Key 0đ -> Cho tải file trực tiếp luôn
     if (currentPrice === 0) {
         document.getElementById('formSection').style.display = 'none';
         document.getElementById('qrSection').style.display = 'block';
@@ -228,10 +229,11 @@ function submitOrder() {
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = true;
 
+    // Gửi kèm full_link về server
     fetch(`${SERVER_URL}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: extractedUser, amount: currentPrice })
+        body: JSON.stringify({ name: extractedUser, full_link: currentFullLink, amount: currentPrice })
     })
     .then(res => res.json())
     .then(data => {
@@ -283,7 +285,6 @@ function startPolling() {
     }, 2000);
 }
 
-// HÀM RESET SẠCH DỮ LIỆU KHI KHÁCH QUAY LẠI TRANG
 function resetOrder() {
     if (pollInterval) clearInterval(pollInterval);
     
@@ -297,13 +298,12 @@ function resetOrder() {
 
     currentOrderId = '';
     currentPrice = 15000;
+    currentFullLink = '';
     
-    // Xóa trắng các ô nhập
     document.getElementById('username').value = '';
     document.getElementById('vipKey').value = '';
     document.getElementById('displayPrice').innerText = "15.000 VNĐ";
 
-    // Khôi phục giao diện màn hình chính
     document.getElementById('qrSection').style.display = 'none';
     document.getElementById('btnDownload').style.display = 'none';
     document.getElementById('formSection').style.display = 'block';
@@ -313,7 +313,6 @@ function resetOrder() {
     btnSubmit.querySelector('span').innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
 }
 
-// HÀM TẢI PROFILE TRỰC TIẾP VÀO SETTINGS (MỚI TEST THÀNH CÔNG)
 function downloadConfig() {
     const dnsList = [
         "ed4988", "c46c6d", "ab98f6", "1f7766", "8ae476",
@@ -322,10 +321,8 @@ function downloadConfig() {
 
     const selectedDnsId = dnsList[Math.floor(Math.random() * dnsList.length)];
     
-    // Gọi thẳng URL API có đuôi .mobileconfig để nhảy vào Setting
     window.location.href = `${SERVER_URL}/download-profile/${selectedDnsId}/${encodeURIComponent(currentClientName)}.mobileconfig`;
 
-    // TẢI XONG TỰ ĐỘNG RESET TRANG VỀ BAN ĐẦU SAU 3 GIÂY
     setTimeout(() => {
         resetOrder();
     }, 3000);
