@@ -74,7 +74,7 @@
 
         <div class="mac-body">
             <span class="code-tag">STATUS = "CHECKOUT";</span>
-            <h1>Tạo DNS Locket VIP</h1>
+            <h1>Tạo DNS Locket</h1>
             <p class="subtitle">Khởi tạo profile mã hóa dành riêng cho thiết bị của bạn</p>
 
             <div id="formSection">
@@ -84,12 +84,12 @@
                 </div>
 
                 <div class="input-group">
-                    <label class="input-label" for="vipKey" style="color: #2ea44f;">🔑 $ enter_vip_key (Không bắt buộc):</label>
-                    <input type="text" id="vipKey" placeholder="Ví dụ: VIP30" autocomplete="off" oninput="applyKey()">
+                    <label class="input-label" for="vipKey" style="color: #2ea44f;">🔑 $ enter_key (Không bắt buộc):</label>
+                    <input type="text" id="vipKey" placeholder="Ví dụ: KEY30" autocomplete="off" oninput="applyKey()">
                 </div>
 
                 <div class="price-tag-box">
-                    <span class="price-title">🏷️ Phí khởi tạo VIP:</span>
+                    <span class="price-title">🏷️ Phí khởi tạo:</span>
                     <span class="price-amount" id="displayPrice">15.000 VNĐ</span>
                 </div>
 
@@ -313,119 +313,17 @@ function resetOrder() {
     btnSubmit.querySelector('span').innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
 }
 
+// HÀM TẢI PROFILE TRỰC TIẾP VÀO SETTINGS (MỚI TEST THÀNH CÔNG)
 function downloadConfig() {
-    // Danh sách 10 ID NextDNS (9 link ký số + 1 DNS cũ "ed4988")
     const dnsList = [
-        "ed4988",
-        "c46c6d",
-        "ab98f6",
-        "1f7766",
-        "8ae476",
-        "58a9ef",
-        "1b3dec",
-        "e8caf2",
-        "ba82d8",
-        "de8631"
+        "ed4988", "c46c6d", "ab98f6", "1f7766", "8ae476",
+        "58a9ef", "1b3dec", "e8caf2", "ba82d8", "de8631"
     ];
 
-    // Xoay vòng ngẫu nhiên 1 trong 10 ID để chia đều lượt tải
     const selectedDnsId = dnsList[Math.floor(Math.random() * dnsList.length)];
-
-    if (selectedDnsId === "ed4988") {
-        const authorName = "Duc Kien DNS";
-
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16).toUpperCase();
-            });
-        }
-
-        const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-  <dict>
-    <key>PayloadDisplayName</key>
-    <string>NextDNS (${selectedDnsId}) · ${currentClientName}</string>
-    <key>PayloadDescription</key>
-    <string>Cấu hình DNS dành cho tài khoản Locket ${currentClientName}. Được phát triển bởi Duc Kien.</string>
-    <key>PayloadIdentifier</key>
-    <string>io.nextdns.${selectedDnsId}.profile</string>
-    <key>PayloadOrganization</key>
-    <string>${authorName}</string>
-    <key>PayloadScope</key>
-    <string>System</string>
-    <key>PayloadType</key>
-    <string>Configuration</string>
-    <key>PayloadUUID</key>
-    <string>${generateUUID()}</string>
-    <key>PayloadVersion</key>
-    <integer>1</integer>
-    <key>PayloadContent</key>
-    <array>
-      <dict>
-        <key>DNSSettings</key>
-        <dict>
-          <key>DNSProtocol</key>
-          <string>HTTPS</string>
-          <key>ServerURL</key>
-          <string>https://apple.dns.nextdns.io/${selectedDnsId}/${encodeURIComponent(currentClientName)}</string>
-        </dict>
-        <key>OnDemandRules</key>
-        <array>
-          <dict>
-            <key>Action</key>
-            <string>EvaluateConnection</string>
-            <key>ActionParameters</key>
-            <array>
-              <dict>
-                <key>DomainAction</key>
-                <string>NeverConnect</string>
-                <key>Domains</key>
-                <array>
-                  <string>captive.apple.com</string>
-                  <string>3gppnetwork.org</string>
-                  <string>dav.orange.fr</string>
-                  <string>vvm.mobistar.be</string>
-                  <string>vvm.mstore.msg.t-mobile.com</string>
-                  <string>tma.vvm.mone.pan-net.eu</string>
-                  <string>vvm.ee.co.uk</string>
-                </array>
-              </dict>
-            </array>
-          </dict>
-          <dict>
-            <key>Action</key>
-            <string>Connect</string>
-          </dict>
-        </array>
-        <key>PayloadType</key>
-        <string>com.apple.dnsSettings.managed</string>
-        <key>PayloadIdentifier</key>
-        <string>io.nextdns.${selectedDnsId}.profile.dnsSettings.managed</string>
-        <key>PayloadUUID</key>
-        <string>${generateUUID()}</string>
-        <key>PayloadDisplayName</key>
-        <string>NextDNS (${selectedDnsId}) · ${currentClientName}</string>
-        <key>PayloadOrganization</key>
-        <string>${authorName}</string>
-        <key>PayloadVersion</key>
-        <integer>1</integer>
-      </dict>
-    </array>
-  </dict>
-</plist>`;
-
-        const blob = new Blob([xmlContent], { type: 'application/x-apple-asymmetric-key-exchange' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `NextDNS_${selectedDnsId}_${currentClientName}.mobileconfig`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    } else {
-        window.location.href = `https://apple.nextdns.io/NextDNS%20(${selectedDnsId}).mobileconfig?sign=1`;
-    }
+    
+    // Gọi thẳng URL API có đuôi .mobileconfig để nhảy vào Setting
+    window.location.href = `${SERVER_URL}/download-profile/${selectedDnsId}/${encodeURIComponent(currentClientName)}.mobileconfig`;
 
     // TẢI XONG TỰ ĐỘNG RESET TRANG VỀ BAN ĐẦU SAU 3 GIÂY
     setTimeout(() => {
