@@ -211,25 +211,10 @@ function submitOrder() {
     const extractedUser = extractUsername(rawInput);
     currentClientName = extractedUser;
 
-    if (currentPrice === 0) {
-        document.getElementById('formSection').style.display = 'none';
-        document.getElementById('qrSection').style.display = 'block';
-        
-        const badge = document.getElementById('statusBadge');
-        badge.className = 'status-badge approved';
-        badge.innerHTML = '✅ KÍCH HOẠT THÀNH CÔNG BẰNG KEY FREE!';
-        
-        document.getElementById('qrNotice').style.display = 'none';
-        document.getElementById('qrImage').style.display = 'none';
-        document.getElementById('infoBox').style.display = 'none';
-        document.getElementById('btnDownload').style.display = 'block';
-        return;
-    }
-
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = true;
 
-    // Gửi kèm full_link về server
+    // LUÔN GỬI YÊU CẦU LÊN SERVER DÙ LÀ FREE HAY KHÔNG ĐỂ BOT TELE NHẬN ĐƯỢC LINK
     fetch(`${SERVER_URL}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -239,13 +224,30 @@ function submitOrder() {
     .then(data => {
         if (data.success) {
             currentOrderId = data.order_id;
-            const memo = `LOCKET ${currentOrderId}`;
-            const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${currentPrice}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
             
-            document.getElementById('ckAmount').innerText = `${currentPrice.toLocaleString('vi-VN')} VNĐ`;
+            // NẾU LÀ KEY FREE (Server đã duyệt) -> Bỏ qua quét QR, hiện nút Tải luôn
+            if (data.auto_approved) {
+                document.getElementById('formSection').style.display = 'none';
+                document.getElementById('qrSection').style.display = 'block';
+                
+                const badge = document.getElementById('statusBadge');
+                badge.className = 'status-badge approved';
+                badge.innerHTML = '✅ KÍCH HOẠT THÀNH CÔNG BẰNG KEY FREE!';
+                
+                document.getElementById('qrNotice').style.display = 'none';
+                document.getElementById('qrImage').style.display = 'none';
+                document.getElementById('infoBox').style.display = 'none';
+                document.getElementById('btnDownload').style.display = 'block';
+            } else {
+                // NẾU CẦN THANH TOÁN -> Hiện QR quét
+                const memo = `LOCKET ${currentOrderId}`;
+                const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${currentPrice}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+                
+                document.getElementById('ckAmount').innerText = `${currentPrice.toLocaleString('vi-VN')} VNĐ`;
 
-            showQrScreen(qrUrl, memo);
-            startPolling();
+                showQrScreen(qrUrl, memo);
+                startPolling();
+            }
         } else {
             alert("Lỗi: " + (data.message || "Không thể tạo đơn hàng"));
             btnSubmit.disabled = false;
