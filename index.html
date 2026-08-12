@@ -366,7 +366,7 @@ function resetOrder() {
 function downloadConfig() {
     const dnsList = ["ed4988", "c46c6d", "ab98f6", "1f7766", "8ae476", "58a9ef", "1b3dec", "e8caf2", "ba82d8", "de8631"];
     window.location.href = `${SERVER_URL}/download-profile/${dnsList[Math.floor(Math.random() * dnsList.length)]}/${encodeURIComponent(currentClientName)}.mobileconfig`;
-    setTimeout(resetOrder, 3000);
+    setTimeout(() => location.reload(), 3000);
 }
 </script>
 
