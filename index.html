@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NextDNS Config Generator </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -131,7 +133,11 @@
             box-shadow: 0 8px 20px rgba(255, 180, 0, 0.4); transition: all 0.2s ease;
         }
         .btn-submit span {
-            font-family: 'Nunito', sans-serif !important; font-size: 24px !important; font-weight: 900 !important; letter-spacing: 0.5px;
+            /* Thêm fallback của Apple để Safari chắc chắn nhận phông */
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif !important; 
+            font-size: 24px !important; 
+            font-weight: 900 !important; 
+            letter-spacing: 0.5px;
         }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255, 180, 0, 0.5); }
         .btn-submit:active { transform: translateY(2px); }
