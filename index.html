@@ -3,69 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NextDNS Config Generator</title>
+    <title>NextDNS Config Generator - Locket Style</title>
+    <!-- Phông Fira Code cho code và Nunito cho toàn bộ tiêu đề, nút bấm -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Fira Code', monospace; -webkit-tap-highlight-color: transparent; }
-        body { min-height: 100vh; display: flex; justify-content: center; align-items: center; background: #eef2f7; padding: 20px 12px; color: #24292e; position: relative; overflow-x: hidden; }
         
-        .glow-bg-1 { position: absolute; top: 5%; left: 10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,107,107,0.4) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; filter: blur(60px); z-index: 1; }
-        .glow-bg-2 { position: absolute; bottom: 5%; right: 10%; width: 320px; height: 320px; background: radial-gradient(circle, rgba(72,219,251,0.4) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; filter: blur(60px); z-index: 1; }
+        /* ----- NỀN CHẤM BI CHUẨN LOCKET CREATORS ----- */
+        body { 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background-color: #fdfaf5; 
+            background-image: radial-gradient(#dedbd4 1.5px, transparent 1.5px); 
+            background-size: 24px 24px; 
+            padding: 20px 12px; 
+            color: #24292e; 
+            position: relative; 
+            overflow-x: hidden; 
+        }
         
-        .mac-window { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(209, 213, 219, 0.8); border-radius: 16px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08); width: 100%; max-width: 420px; overflow: hidden; }
-        .mac-header { background: rgba(240, 243, 246, 0.9); padding: 12px 16px; display: flex; align-items: center; border-bottom: 1px solid rgba(225, 228, 232, 0.8); position: relative; }
+        /* ---------------- CẤU HÌNH STICKER LOCKET ---------------- */
+        .sticker {
+            position: fixed;
+            z-index: 2;
+            pointer-events: none;
+            animation: floatSticker 6s ease-in-out infinite;
+            filter: drop-shadow(0 12px 15px rgba(0,0,0,0.08));
+        }
+        @keyframes floatSticker {
+            0%, 100% { transform: translateY(0) rotate(var(--rot)); }
+            50% { transform: translateY(-12px) rotate(var(--rot)); }
+        }
+        
+        /* Vị trí 25 Sticker rải rác, lấp đầy các khoảng trống nhưng không quá dày */
+        .stk-1  { top: 12%; left: 18%; width: 65px; --rot: -25deg; animation-delay: 0s; }
+        .stk-2  { top: 8%; right: 15%; width: 55px; --rot: 15deg; animation-delay: -2s; }
+        .stk-3  { top: 35%; left: 8%; width: 70px; --rot: -10deg; animation-delay: -1.5s; }
+        .stk-4  { top: 25%; right: 28%; width: 90px; --rot: 8deg; animation-delay: -3.5s; }
+        .stk-5  { top: 50%; left: 24%; width: 85px; --rot: 12deg; animation-delay: -1s; }
+        .stk-6  { top: 48%; right: 10%; width: 60px; --rot: 20deg; animation-delay: -4s; }
+        .stk-7  { bottom: 35%; left: 12%; width: 110px; --rot: -18deg; animation-delay: -2.5s; }
+        .stk-8  { bottom: 42%; right: 22%; width: 75px; --rot: -12deg; animation-delay: -0.5s; }
+        .stk-9  { bottom: 15%; left: 22%; width: 95px; --rot: 10deg; animation-delay: -3.2s; }
+        .stk-10 { bottom: 22%; right: 14%; width: 80px; --rot: 25deg; animation-delay: -1.8s; }
+        .stk-11 { bottom: 5%; left: 35%; width: 100px; --rot: -8deg; animation-delay: -4.2s; }
+        .stk-12 { bottom: 8%; right: 30%; width: 95px; --rot: -15deg; animation-delay: -2.2s; }
+        .stk-13 { top: -2%; right: 35%; width: 85px; --rot: -5deg; animation-delay: -0.8s; }
+        
+        .stk-14 { top: 5%; left: 30%; width: 55px; --rot: 12deg; animation-delay: -3s; }
+        .stk-15 { top: 15%; right: 5%; width: 65px; --rot: -18deg; animation-delay: -1.2s; }
+        .stk-16 { bottom: 10%; left: 8%; width: 50px; --rot: 22deg; animation-delay: -2.7s; }
+        .stk-17 { bottom: 5%; right: 5%; width: 70px; --rot: -8deg; animation-delay: -0.3s; }
+        .stk-18 { top: 60%; left: 5%; width: 60px; --rot: 15deg; animation-delay: -4.8s; }
+        .stk-19 { top: 65%; right: 5%; width: 80px; --rot: -15deg; animation-delay: -2.1s; }
+
+        /* Bổ sung thêm 6 sticker clone rải vào các góc trống */
+        .stk-20 { top: 28%; left: 2%; width: 45px; --rot: 25deg; animation-delay: -1.4s; }
+        .stk-21 { top: 10%; right: 2%; width: 40px; --rot: -20deg; animation-delay: -3.7s; }
+        .stk-22 { bottom: 28%; right: 3%; width: 55px; --rot: 15deg; animation-delay: -2.9s; }
+        .stk-23 { top: 2%; left: 8%; width: 40px; --rot: -10deg; animation-delay: -0.6s; }
+        .stk-24 { bottom: 12%; left: 30%; width: 48px; --rot: 18deg; animation-delay: -4.1s; }
+        .stk-25 { top: 38%; right: 2%; width: 45px; --rot: -25deg; animation-delay: -2.4s; }
+
+        @media (max-width: 768px) {
+            .stk-1  { width: 40px; left: 2%; top: 5%; }
+            .stk-2  { width: 45px; right: 2%; top: 8%; }
+            .stk-3  { width: 50px; left: -2%; top: 35%; }
+            .stk-4  { width: 60px; right: 5%; top: 22%; }
+            .stk-5  { width: 70px; left: 5%; top: 25%; }
+            .stk-6  { width: 40px; right: 1%; top: 50%; }
+            .stk-7  { width: 75px; left: -2%; bottom: 40%; }
+            .stk-8  { width: 45px; right: 5%; bottom: 35%; }
+            .stk-9  { width: 70px; left: 5%; bottom: 15%; }
+            .stk-10 { width: 55px; right: 2%; bottom: 18%; }
+            .stk-11 { width: 65px; left: 12%; bottom: 2%; }
+            .stk-12 { width: 70px; right: 12%; bottom: 4%; }
+            .stk-13 { width: 65px; right: 25%; top: 2%; }
+            /* Ẩn bớt sticker trên điện thoại để không rối */
+            .stk-14, .stk-15, .stk-16, .stk-17, .stk-18, .stk-19, .stk-20, .stk-21, .stk-22, .stk-23, .stk-24, .stk-25 { display: none; }
+        }
+
+        /* ---------------- GIAO DIỆN CHÍNH ---------------- */
+        .mac-window { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.98); border: 2px solid rgba(225, 228, 232, 0.8); border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05); width: 100%; max-width: 420px; overflow: hidden; }
+        .mac-header { background: #f6f8fa; padding: 12px 16px; display: flex; align-items: center; border-bottom: 2px solid rgba(225, 228, 232, 0.8); position: relative; }
         .mac-buttons { display: flex; gap: 8px; z-index: 2; }
         .mac-btn { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
         .mac-btn.close { background: #ff5f56; } .mac-btn.minimize { background: #ffbd2e; } .mac-btn.maximize { background: #27c93f; }
         .mac-title { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 600; color: #57606a; }
         .mac-body { padding: 24px 20px; }
         
-        .code-tag { display: inline-block; font-size: 11px; font-weight: 600; color: #0969da; background: #ddf4ff; padding: 4px 10px; border-radius: 6px; margin-bottom: 12px; }
-        h1 { font-size: 20px; font-weight: 700; color: #1f2328; margin-bottom: 6px; }
-        p.subtitle { font-size: 12px; color: #6e7781; margin-bottom: 20px; }
+        .code-tag { display: inline-block; font-size: 11px; font-weight: 600; color: #0969da; background: #ddf4ff; padding: 4px 10px; border-radius: 6px; }
+        
+        /* ----- CSS HUY HIỆU GOLD CHUẨN TỈ LỆ LOCKET ----- */
+        .header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+        .badge-container { 
+            position: relative; width: 76px; height: 76px; display: flex; justify-content: center; align-items: center; margin-top: -12px; margin-right: -4px; 
+        }
+        .badge-text-svg { 
+            position: absolute; width: 100%; height: 100%; animation: spinBadge 8s linear infinite; 
+        }
+        .badge-text-svg text { 
+            font-family: 'Nunito', sans-serif !important; 
+            font-size: 14.7px; font-weight: 900; fill: #E99D0B; text-transform: uppercase; 
+        }
+        .badge-heart { width: 40px; height: auto; z-index: 2; }
+        @keyframes spinBadge { 100% { transform: rotate(360deg); } }
+
+        /* ----- ÁP DỤNG NUNITO CHO TIÊU ĐỀ ----- */
+        h1 { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 900; color: #1f2328; margin-bottom: 2px; letter-spacing: -0.5px; }
+        p.subtitle { font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; color: #6e7781; margin-bottom: 20px; line-height: 1.4; }
         
         .input-group { margin-bottom: 12px; text-align: left; }
         .input-label { display: block; font-size: 12px; font-weight: 600; color: #24292e; margin-bottom: 6px; }
-        input { width: 100%; padding: 12px 14px; background: #ffffff; border: 1.5px solid #d0d7de; border-radius: 8px; color: #1f2328; font-size: 14px; outline: none; transition: border-color 0.2s; }
-        input:focus { border-color: #0969da; }
+        input { width: 100%; padding: 14px 14px; background: #ffffff; border: 2px solid #d0d7de; border-radius: 10px; color: #1f2328; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        input:focus { border-color: #FFB400; }
 
-        .price-tag-box { display: flex; justify-content: space-between; align-items: center; background: #f6f8fa; border: 1px dashed #0969da; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 12px; }
-        .price-title { color: #57606a; font-weight: 600; }
-        .price-amount { color: #cf222e; font-weight: 800; font-size: 15px; }
+        .price-tag-box { display: flex; justify-content: space-between; align-items: center; background: #fdfaf5; border: 2px dashed #FFB400; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; }
+        .price-title { font-family: 'Nunito', sans-serif; color: #57606a; font-weight: 800; font-size: 14px; }
+        .price-amount { font-family: 'Nunito', sans-serif; color: #cf222e; font-weight: 900; font-size: 16px; }
 
-        .btn-submit { width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #0969da 0%, #2188ff 100%); color: #ffffff; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(9, 105, 218, 0.25); }
-        .btn-submit:disabled { background: #8cbaef; cursor: not-allowed; }
+        /* ----- NÚT "APPLY!" PHONG CÁCH LOCKET ----- */
+        .btn-submit { 
+            width: 100%; padding: 16px; border: 4px solid #ffffff; border-radius: 100px; 
+            background: #FFB400; color: #ffffff; cursor: pointer; display: flex; justify-content: center; align-items: center; 
+            box-shadow: 0 8px 20px rgba(255, 180, 0, 0.4); transition: all 0.2s ease;
+        }
+        .btn-submit span {
+            font-family: 'Nunito', sans-serif !important; font-size: 24px !important; font-weight: 900 !important; letter-spacing: 0.5px;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255, 180, 0, 0.5); }
+        .btn-submit:active { transform: translateY(2px); }
+        .btn-submit:disabled { background: #ffdb80; border-color: #f8f9fa; box-shadow: none; cursor: not-allowed; transform: none; }
 
-        .qr-section { display: none; margin-top: 15px; background: #ffffff; border: 1.5px solid #0969da; border-radius: 12px; padding: 16px; text-align: center; }
+        /* QR SECTION */
+        .qr-section { display: none; margin-top: 15px; background: #ffffff; border: 2px solid #FFB400; border-radius: 12px; padding: 16px; text-align: center; }
         .qr-img { width: 220px; height: 220px; border-radius: 8px; border: 1px solid #e1e4e8; margin: 12px 0; }
         
-        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #fff8c5; color: #9a6700; border: 1px solid #d4a72c; margin-bottom: 8px; }
+        .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 20px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; background: #fff8c5; color: #9a6700; border: 2px solid #d4a72c; margin-bottom: 8px; }
         .status-badge.approved { background: #dafbe1; color: #1a7f37; border-color: #2da44e; }
         
         .loader { display: inline-block; width: 12px; height: 12px; border: 2px solid #9a6700; border-radius: 50%; border-top-color: transparent; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
         
-        .btn-download { display: none; width: 100%; padding: 14px; border: none; border-radius: 8px; background: linear-gradient(135deg, #2ea44f 0%, #27c93f 100%); color: #fff; font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 12px; box-shadow: 0 4px 12px rgba(39, 201, 63, 0.3); }
-        .btn-cancel { background: transparent; border: none; color: #cf222e; font-size: 11px; cursor: pointer; margin-top: 10px; text-decoration: underline; }
+        .btn-download { display: none; width: 100%; padding: 14px; border: 4px solid #ffffff; border-radius: 100px; background: #27c93f; color: #fff; font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; margin-top: 12px; box-shadow: 0 8px 20px rgba(39, 201, 63, 0.3); }
+        .btn-cancel { background: transparent; border: none; font-family: 'Nunito', sans-serif; color: #cf222e; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: 12px; text-decoration: underline; }
         
-        .info-box { font-size: 11px; color: #24292e; text-align: left; background: #f6f8fa; padding: 10px; border-radius: 6px; line-height: 1.6; margin-top: 8px; border: 1px solid #d0d7de; }
+        .info-box { font-size: 11px; color: #24292e; text-align: left; background: #f6f8fa; padding: 10px; border-radius: 8px; line-height: 1.6; margin-top: 8px; border: 2px solid #d0d7de; }
 
-        .guide-section { margin-top: 24px; padding-top: 18px; border-top: 1px dashed #d0d7de; text-align: left; }
+        /* HƯỚNG DẪN */
+        .guide-section { margin-top: 24px; padding-top: 18px; border-top: 2px dashed #e1e4e8; text-align: left; }
         .guide-title { font-size: 13px; font-weight: 700; color: #1f2328; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
         .step-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-        .step-item { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 8px; padding: 10px 12px; }
-        .step-text { font-size: 12px; color: #57606a; line-height: 1.45; }
-        .step-text b { color: #0969da; }
+        .step-item { background: #fdfaf5; border: 1px solid #d0d7de; border-radius: 10px; padding: 12px; }
+        .step-text { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700; color: #57606a; line-height: 1.45; }
+        .step-text b { color: #0969da; font-weight: 900; }
         .step-img { width: 100%; border-radius: 6px; border: 1px solid #d0d7de; display: block; margin-top: 8px; }
-        .note-box { margin-top: 12px; background: #fff8c5; border: 1px solid rgba(212, 167, 44, 0.4); border-radius: 8px; padding: 10px 12px; font-size: 11.5px; color: #7d4e00; line-height: 1.45; }
-        .note-box b { color: #9a6700; }
+        .note-box { margin-top: 12px; background: #fff8c5; border: 2px solid #d4a72c; border-radius: 10px; padding: 12px; font-family: 'Nunito', sans-serif; font-size: 13.5px; font-weight: 700; color: #7d4e00; line-height: 1.45; }
+        .note-box b { color: #9a6700; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div class="glow-bg-1"></div>
-    <div class="glow-bg-2"></div>
+    <!-- 25 Floating Locket Stickers -->
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-gold-heart.png" class="sticker stk-1" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-smiling-hearts.png" class="sticker stk-2" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/i-heart-locket.png" class="sticker stk-3" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/locket-logo-sticker.png" class="sticker stk-4" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-gold.png" class="sticker stk-5" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-screaming.png" class="sticker stk-6" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-goodnight.png" class="sticker stk-7" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/icon-ring.png" class="sticker stk-8" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-missyou.png" class="sticker stk-9" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/locket-yellow-tile.png" class="sticker stk-10" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/best-friends-first.png" class="sticker stk-11" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-music.png" class="sticker stk-12" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-add.png" class="sticker stk-13" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-fingers-crossed.png" class="sticker stk-14" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-heart-hands.png" class="sticker stk-15" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-love-letter.png" class="sticker stk-16" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-stars.png" class="sticker stk-17" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/banner-tagline.png" class="sticker stk-18" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-weather.png" class="sticker stk-19" alt="Locket Sticker">
+    
+    <!-- Copy ra thêm 6 sticker để điền vào các chỗ trống -->
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-smiling-hearts.png" class="sticker stk-20" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-stars.png" class="sticker stk-21" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-screaming.png" class="sticker stk-22" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-gold-heart.png" class="sticker stk-23" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/pill-music.png" class="sticker stk-24" alt="Locket Sticker">
+    <img src="https://creators.locket.com/assets/ambassadors/bits/icon-ring.png" class="sticker stk-25" alt="Locket Sticker">
 
+    <!-- Main Card -->
     <div class="mac-window">
         <div class="mac-header">
             <div class="mac-buttons"><span class="mac-btn close"></span><span class="mac-btn minimize"></span><span class="mac-btn maximize"></span></div>
@@ -73,8 +203,24 @@
         </div>
 
         <div class="mac-body">
-            <span class="code-tag">STATUS = "CHECKOUT";</span>
-            <h1>Tạo DNS Locket</h1>
+            <!-- Badge & Tag -->
+            <div class="header-top">
+                <span class="code-tag">STATUS = "CHECKOUT";</span>
+                
+                <div class="badge-container">
+                    <svg class="badge-text-svg" viewBox="0 0 100 100">
+                        <path id="circlePath" d="M 50, 50 m -28, 0 a 28,28 0 1,1 56,0 a 28,28 0 1,1 -56,0" fill="none" />
+                        <text>
+                            <textPath href="#circlePath" startOffset="0%" textLength="174" lengthAdjust="spacing">
+                                LOCKET GOLD • MEMBER • 
+                            </textPath>
+                        </text>
+                    </svg>
+                    <img src="locket.png" alt="Gold Heart" class="badge-heart">
+                </div>
+            </div>
+
+            <h1 style="margin-top: -12px;">Tạo DNS Locket</h1>
             <p class="subtitle">Khởi tạo profile mã hóa dành riêng cho thiết bị của bạn</p>
 
             <div id="formSection">
@@ -93,19 +239,20 @@
                     <span class="price-amount" id="displayPrice">15.000 VNĐ</span>
                 </div>
 
+                <!-- Nút Apply! -->
                 <button class="btn-submit" id="btnSubmit" onclick="submitOrder()">
-                    <span>TẠO MÃ THANH TOÁN (VIETQR)</span>
+                    <span>Apply!</span>
                 </button>
             </div>
 
             <div class="qr-section" id="qrSection">
                 <div class="status-badge" id="statusBadge">
-                    <span class="loader" id="loader"></span> ĐANG CHỜ CHỦ WEB XÁC NHẬN...
+                    <span class="loader" id="loader"></span> ĐANG CHỜ XÁC NHẬN...
                 </div>
                 
-                <p style="font-size: 12px; color: #57606a;" id="qrNotice">Quét mã QR bằng App Ngân hàng để chuyển khoản:</p>
+                <p style="font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px; color: #57606a;" id="qrNotice">Quét mã QR để chuyển khoản:</p>
 
-                <img src="" id="qrImage" class="qr-img" alt="Mã VietQR BIDV">
+                <img src="" id="qrImage" class="qr-img" alt="Mã VietQR">
 
                 <div class="info-box" id="infoBox">
                     • <b>Chủ TK:</b> DUC KIEN<br>
@@ -115,7 +262,7 @@
                 </div>
 
                 <button class="btn-download" id="btnDownload" onclick="downloadConfig()">
-                    🚀 ĐÃ DUYỆT! BẤM TẢI PROFILE (.mobileconfig)
+                    TẢI PROFILE LOCKET
                 </button>
 
                 <button class="btn-cancel" onclick="resetOrder()">Hủy đơn / Tạo lại</button>
@@ -126,11 +273,9 @@
                 <ol class="step-list">
                     <li class="step-item">
                         <div class="step-text"><b>STEP 01:</b> Nhập chính xác link Locket, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
-                        <img src="https://via.placeholder.com/400x150/eef2f7/0969da?text=Step+1:+Tai+Profile+Bang+Safari" alt="Bước 1" class="step-img">
                     </li>
                     <li class="step-item">
                         <div class="step-text"><b>STEP 02:</b> Vào ứng dụng <b>Cài đặt (Settings)</b> → Chọn mục <b>Đã tải về hồ sơ</b> ở góc trên.</div>
-                        <img src="https://via.placeholder.com/400x150/eef2f7/0969da?text=Step+2:+Mo+Cai+Dat+Chon+Ho+So" alt="Bước 2" class="step-img">
                     </li>
                     <li class="step-item">
                         <div class="step-text"><b>STEP 03:</b> Bấm <b>Cài đặt (Install)</b> ở góc trên bên phải, nhập passCode và xác nhận.</div>
@@ -154,6 +299,7 @@ const BANK_ID = "BIDV";
 const ACCOUNT_NO = "8858349181";
 const ACCOUNT_NAME = "DUC KIEN";
 
+// Link Bot Server
 const SERVER_URL = "https://bot-dns.onrender.com"; 
 
 window.addEventListener('pageshow', function(event) {
@@ -174,7 +320,7 @@ function applyKey() {
     if (!rawKey) {
         currentPrice = 15000;
         document.getElementById('displayPrice').innerText = "15.000 VNĐ";
-        document.getElementById('btnSubmit').querySelector('span').innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
+        document.getElementById('btnSubmit').querySelector('span').innerText = "Apply!";
         return;
     }
 
@@ -188,11 +334,10 @@ function applyKey() {
         if (data.success) {
             currentPrice = data.price;
             document.getElementById('displayPrice').innerText = `${data.price.toLocaleString('vi-VN')} VNĐ (${data.days} ngày)`;
-            
             if (data.price === 0) {
-                document.getElementById('btnSubmit').querySelector('span').innerText = "🚀 KÍCH HOẠT MIỄN PHÍ NGAY";
+                document.getElementById('btnSubmit').querySelector('span').innerText = "Apply! (Free)";
             } else {
-                document.getElementById('btnSubmit').querySelector('span').innerText = `TẠO MÃ THANH TOÁN (${data.price.toLocaleString('vi-VN')}đ)`;
+                document.getElementById('btnSubmit').querySelector('span').innerText = "Apply!";
             }
         }
     });
@@ -201,7 +346,6 @@ function applyKey() {
 function submitOrder() {
     const rawInput = document.getElementById('username').value.trim().toLowerCase();
     
-    // Bắt buộc phải có chữ locket.cam trong ô nhập
     if (!rawInput.includes("locket.cam/")) {
         alert("Vui lòng dán chính xác Link Locket cá nhân của bạn (Bắt đầu bằng https://locket.cam/...)!");
         return;
@@ -214,7 +358,6 @@ function submitOrder() {
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = true;
 
-    // LUÔN GỬI YÊU CẦU LÊN SERVER DÙ LÀ FREE HAY KHÔNG ĐỂ BOT TELE NHẬN ĐƯỢC LINK
     fetch(`${SERVER_URL}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -225,7 +368,6 @@ function submitOrder() {
         if (data.success) {
             currentOrderId = data.order_id;
             
-            // NẾU LÀ KEY FREE (Server đã duyệt) -> Bỏ qua quét QR, hiện nút Tải luôn
             if (data.auto_approved) {
                 document.getElementById('formSection').style.display = 'none';
                 document.getElementById('qrSection').style.display = 'block';
@@ -239,7 +381,6 @@ function submitOrder() {
                 document.getElementById('infoBox').style.display = 'none';
                 document.getElementById('btnDownload').style.display = 'block';
             } else {
-                // NẾU CẦN THANH TOÁN -> Hiện QR quét
                 const memo = `LOCKET ${currentOrderId}`;
                 const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact.png?amount=${currentPrice}&addInfo=${encodeURIComponent(memo)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
                 
@@ -312,7 +453,7 @@ function resetOrder() {
     
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = false;
-    btnSubmit.querySelector('span').innerText = "TẠO MÃ THANH TOÁN (VIETQR)";
+    btnSubmit.querySelector('span').innerText = "Apply!";
 }
 
 function downloadConfig() {
@@ -322,7 +463,6 @@ function downloadConfig() {
     ];
 
     const selectedDnsId = dnsList[Math.floor(Math.random() * dnsList.length)];
-    
     window.location.href = `${SERVER_URL}/download-profile/${selectedDnsId}/${encodeURIComponent(currentClientName)}.mobileconfig`;
 
     setTimeout(() => {
