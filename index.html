@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NextDNS Config Generator - Locket Style</title>
-    <!-- Phông Fira Code cho code và Nunito cho toàn bộ tiêu đề, nút bấm -->
+    <title>NextDNS Config Generator </title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -199,13 +198,13 @@
     <div class="mac-window">
         <div class="mac-header">
             <div class="mac-buttons"><span class="mac-btn close"></span><span class="mac-btn minimize"></span><span class="mac-btn maximize"></span></div>
-            <div class="mac-title">generator.mobileconfig — zsh</div>
+            <div class="mac-title">generator.mobileconfig — Duc Kien</div>
         </div>
 
         <div class="mac-body">
             <!-- Badge & Tag -->
             <div class="header-top">
-                <span class="code-tag">STATUS = "CHECKOUT";</span>
+                <span class="code-tag">STATUS = "ONLINE";</span>
                 
                 <div class="badge-container">
                     <svg class="badge-text-svg" viewBox="0 0 100 100">
@@ -221,16 +220,16 @@
             </div>
 
             <h1 style="margin-top: -12px;">Tạo DNS Locket</h1>
-            <p class="subtitle">Khởi tạo profile mã hóa dành riêng cho thiết bị của bạn</p>
+            <p class="subtitle">tạo DNS dành riêng cho thiết bị của bạn</p>
 
             <div id="formSection">
                 <div class="input-group">
-                    <label class="input-label" for="username" style="color: #cf222e;">$ enter_locket_link (Bắt buộc):</label>
+                    <label class="input-label" for="username" style="color: #cf222e;">$ Nhập locket link (Bắt buộc):</label>
                     <input type="text" id="username" placeholder="Vd: https://locket.cam/darwjen" autocomplete="off">
                 </div>
 
                 <div class="input-group">
-                    <label class="input-label" for="vipKey" style="color: #2ea44f;">🔑 $ enter_key (Không bắt buộc):</label>
+                    <label class="input-label" for="vipKey" style="color: #2ea44f;">🔑 $ Nhập key (Nếu có):</label>
                     <input type="text" id="vipKey" placeholder="Ví dụ: KEY30" autocomplete="off" oninput="applyKey()">
                 </div>
 
@@ -269,20 +268,23 @@
             </div>
 
             <div class="guide-section">
-                <div class="guide-title">📌 // GUIDE_INSTALL_IOS.md</div>
+                <div class="guide-title">📌 Hướng dẫn cài đặt</div>
                 <ol class="step-list">
                     <li class="step-item">
                         <div class="step-text"><b>STEP 01:</b> Nhập chính xác link Locket, thanh toán rồi bấm <b>TẢI PROFILE</b> bằng <b>Safari</b>. Chọn <i>Cho phép</i> khi được hỏi.</div>
                     </li>
                     <li class="step-item">
-                        <div class="step-text"><b>STEP 02:</b> Vào ứng dụng <b>Cài đặt (Settings)</b> → Chọn mục <b>Đã tải về hồ sơ</b> ở góc trên.</div>
+                        <div class="step-text"><b>STEP 02:</b> Vào ứng dụng <b>Cài đặt (Settings)</b> → Chọn mục <b>Đã tải về hồ sơ</b> hoặc <b>vào phần cài đặt chung </b>-><b> quản lý VPN & thiết bị </b>
                     </li>
                     <li class="step-item">
-                        <div class="step-text"><b>STEP 03:</b> Bấm <b>Cài đặt (Install)</b> ở góc trên bên phải, nhập passCode và xác nhận.</div>
+                        <div class="step-text"><b>STEP 03:</b> Tìm <b>dns đã được tải về </b> ấn cài đặt, nhập mật khẩu và xác nhận.</div>
+                    </li>
+                     <li class="step-item">
+                        <div class="step-text"><b>STEP 04:</b> sau đó <b>vào phần DNS </b> </b> chuyển về tự động, sau khi thấy locket đã lên gold hãy quay lại phần DNS chuyển sang DNS mà bạn đã tải về</div>
                     </li>
                 </ol>
                 <div class="note-box">
-                    <b>💡 SYSTEM_NOTE:</b> Cài đặt xong, hãy mở lại Locket hoặc bật/tắt lại kết nối Wi-Fi/4G để DNS kích hoạt tức thì.
+                    <b>💡 NOTE:</b> NẾU CHƯA THẤY GOLD Đóng hẳn Locket khỏi màn hình đa nhiệm rồi mở lại. Đăng xuất tài khoản và đăng nhập lại. Nếu vẫn chưa có, xóa Locket và tải lại bản mới nhất.
                 </div>
             </div>
         </div>
