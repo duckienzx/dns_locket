@@ -21,7 +21,7 @@
         /* ----- CẤU HÌNH STICKER (z-index thấp để nằm sau khung) ----- */
         .sticker {
             position: fixed;
-            z-index: 5; /* Thấp hơn khung (10) nên sẽ chui ra sau */
+            z-index: 5;
             pointer-events: none;
             animation: floatSticker 6s ease-in-out infinite;
             filter: drop-shadow(0 12px 15px rgba(0,0,0,0.08));
@@ -67,7 +67,7 @@
         .mac-window { 
             position: relative; 
             z-index: 10; 
-            background: rgba(255, 255, 255, 0.4); /* Trong suốt để nhìn thấy sticker phía sau */
+            background: rgba(255, 255, 255, 0.4); 
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px);
             border: 2px solid rgba(255, 255, 255, 0.8); 
@@ -103,6 +103,18 @@
         .input-label { display: block; font-size: 12px; font-weight: 600; color: #24292e; margin-bottom: 6px; }
         input { width: 100%; padding: 14px 14px; background: rgba(255, 255, 255, 0.85); border: 2px solid #d0d7de; border-radius: 10px; color: #1f2328; font-size: 14px; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: #FFB400; }
+
+        /* ----- STYLE CỦA KHUNG NHẬP KEY & NÚT ----- */
+        .key-row { display: flex; gap: 8px; }
+        .key-row input { flex: 1; }
+        .btn-check { 
+            background: #24292e; color: #ffffff; border: none; border-radius: 10px; 
+            padding: 0 16px; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; 
+            cursor: pointer; transition: background 0.2s; white-space: nowrap;
+        }
+        .btn-check:hover { background: #57606a; }
+        .btn-check:active { transform: scale(0.96); }
+        #keyMessage { font-size: 13.5px; font-family: 'Nunito', sans-serif; font-weight: 800; margin-top: 8px; display: none; }
 
         .price-tag-box { display: flex; justify-content: space-between; align-items: center; background: rgba(253, 250, 245, 0.7); border: 2px dashed #FFB400; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; }
         .price-title { font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif; color: #57606a; font-weight: 800; font-size: 14px; }
@@ -143,7 +155,6 @@
         .step-item { background: rgba(253, 250, 245, 0.6); border: 1px solid rgba(208, 215, 222, 0.8); border-radius: 10px; padding: 12px; }
         .step-text { font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; font-weight: 700; color: #57606a; line-height: 1.45; }
         .step-text b { color: #0969da; font-weight: 900; }
-        .step-img { width: 100%; border-radius: 6px; border: 1px solid #d0d7de; display: block; margin-top: 8px; }
         .note-box { margin-top: 12px; background: rgba(255, 248, 197, 0.8); border: 2px solid #d4a72c; border-radius: 10px; padding: 12px; font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 13.5px; font-weight: 700; color: #7d4e00; line-height: 1.45; }
         .note-box b { color: #9a6700; font-weight: 900; }
     </style>
@@ -206,9 +217,14 @@
                     <input type="text" id="username" placeholder="Vd: https://locket.cam/darwjen" autocomplete="off">
                 </div>
 
+                <!-- PHẦN NHẬP KEY & NÚT KIỂM TRA ĐƯỢC CHỈNH SỬA -->
                 <div class="input-group">
                     <label class="input-label" for="vipKey" style="color: #2ea44f;">🔑 $ Nhập key (Nếu có):</label>
-                    <input type="text" id="vipKey" placeholder="Ví dụ: KEY30" autocomplete="off" oninput="applyKey()">
+                    <div class="key-row">
+                        <input type="text" id="vipKey" placeholder="Ví dụ: KEY30" autocomplete="off">
+                        <button type="button" class="btn-check" onclick="applyKey()">Kiểm tra</button>
+                    </div>
+                    <div id="keyMessage"></div> <!-- Chỗ hiện thông báo Key -->
                 </div>
 
                 <div class="price-tag-box">
@@ -266,12 +282,24 @@ function extractUsername(input) {
 
 function applyKey() {
     const rawKey = document.getElementById('vipKey').value.trim();
+    const msgEl = document.getElementById('keyMessage');
+    
+    // NẾU Ô TRỐNG MÀ BẤM KIỂM TRA
     if (!rawKey) {
+        msgEl.style.display = 'block';
+        msgEl.style.color = '#cf222e';
+        msgEl.innerText = '❌ Vui lòng nhập mã Key để kiểm tra!';
         currentPrice = 15000;
         document.getElementById('displayPrice').innerText = "15.000 VNĐ";
         document.getElementById('btnSubmit').querySelector('span').innerText = "Apply!";
         return;
     }
+
+    msgEl.style.display = 'block';
+    msgEl.style.color = '#57606a';
+    msgEl.innerText = '⏳ Đang kiểm tra mã Key...';
+
+    // KIỂM TRA TỪ API CỦA SERVER
     fetch(`${SERVER_URL}/check-key`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -281,14 +309,31 @@ function applyKey() {
     .then(data => {
         if (data.success) {
             currentPrice = data.price;
-            document.getElementById('displayPrice').innerText = `${data.price.toLocaleString('vi-VN')} VNĐ (${data.days} ngày)`;
-            document.getElementById('btnSubmit').querySelector('span').innerText = data.price === 0 ? "Apply! (Free)" : "Apply!";
+            // CHỈ HIỂN THỊ THÀNH CÔNG, KHÔNG HIỂN THỊ SỐ NGÀY!
+            msgEl.style.color = '#1a7f37';
+            msgEl.innerText = '✅ Mã kích hoạt hợp lệ!';
+            
+            document.getElementById('displayPrice').innerText = `${data.price.toLocaleString('vi-VN')} VNĐ`;
+            document.getElementById('btnSubmit').querySelector('span').innerText = data.price === 0 ? "Apply! (Key Free)" : "Apply!";
+        } else {
+            currentPrice = 15000;
+            msgEl.style.color = '#cf222e';
+            msgEl.innerText = '❌ ' + (data.message || 'Mã không hợp lệ!');
+            
+            document.getElementById('displayPrice').innerText = "15.000 VNĐ";
+            document.getElementById('btnSubmit').querySelector('span').innerText = "Apply!";
         }
+    })
+    .catch(err => {
+        msgEl.style.color = '#cf222e';
+        msgEl.innerText = '❌ Lỗi kết nối đến máy chủ!';
     });
 }
 
 function submitOrder() {
     const rawInput = document.getElementById('username').value.trim().toLowerCase();
+    const appliedKey = document.getElementById('vipKey').value.trim(); // LẤY KEY GỬI LÊN KHI TẠO ĐƠN
+
     if (!rawInput.includes("locket.cam/")) {
         alert("Vui lòng dán chính xác Link Locket!");
         return;
@@ -298,15 +343,22 @@ function submitOrder() {
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = true;
 
+    // GỬI KÈM BIẾN `key` LÊN SERVER
     fetch(`${SERVER_URL}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: currentClientName, full_link: currentFullLink, amount: currentPrice })
+        body: JSON.stringify({ 
+            name: currentClientName, 
+            full_link: currentFullLink, 
+            amount: currentPrice,
+            key: appliedKey 
+        })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
             currentOrderId = data.order_id;
+            // NẾU GIÁ 0 ĐỒNG -> CHO VÀO THẲNG LẤY PROFILE KHÔNG CẦN CHUYỂN KHOẢN
             if (data.auto_approved) {
                 document.getElementById('formSection').style.display = 'none';
                 document.getElementById('qrSection').style.display = 'block';
@@ -353,8 +405,10 @@ function resetOrder() {
     if (pollInterval) clearInterval(pollInterval);
     if (currentOrderId) fetch(`${SERVER_URL}/cancel-order`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ order_id: currentOrderId }) }).catch();
     currentOrderId = ''; currentPrice = 15000; currentFullLink = '';
+    
     document.getElementById('username').value = '';
     document.getElementById('vipKey').value = '';
+    document.getElementById('keyMessage').style.display = 'none';
     document.getElementById('displayPrice').innerText = "15.000 VNĐ";
     document.getElementById('qrSection').style.display = 'none';
     document.getElementById('btnDownload').style.display = 'none';
