@@ -18,11 +18,9 @@
             background-size: 24px 24px; padding: 20px 12px; color: #24292e; position: relative; overflow-x: hidden; 
         }
         
-        /* ----- CẤU HÌNH STICKER (z-index thấp để nằm sau khung) ----- */
+        /* ----- CẤU HÌNH STICKER ----- */
         .sticker {
-            position: fixed;
-            z-index: 5;
-            pointer-events: none;
+            position: fixed; z-index: 5; pointer-events: none;
             animation: floatSticker 6s ease-in-out infinite;
             filter: drop-shadow(0 12px 15px rgba(0,0,0,0.08));
         }
@@ -31,7 +29,6 @@
             50% { transform: translateY(-12px) rotate(var(--rot)); }
         }
         
-        /* 25 vị trí sticker */
         .stk-1  { top: 12%; left: 18%; width: 65px; --rot: -25deg; animation-delay: 0s; }
         .stk-2  { top: 8%; right: 15%; width: 55px; --rot: 15deg; animation-delay: -2s; }
         .stk-3  { top: 35%; left: 8%; width: 70px; --rot: -10deg; animation-delay: -1.5s; }
@@ -63,19 +60,12 @@
             .stk-5, .stk-10, .stk-14, .stk-15, .stk-16, .stk-17, .stk-18, .stk-19, .stk-20, .stk-21, .stk-22, .stk-23, .stk-24, .stk-25 { display: none; }
         }
 
-        /* ---------------- GIAO DIỆN CHÍNH (Z-INDEX 10) ---------------- */
+        /* ---------------- GIAO DIỆN CHÍNH ---------------- */
         .mac-window { 
-            position: relative; 
-            z-index: 10; 
-            background: rgba(255, 255, 255, 0.4); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.8); 
-            border-radius: 20px; 
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08); 
-            width: 100%; 
-            max-width: 420px; 
-            overflow: hidden; 
+            position: relative; z-index: 10; background: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08); width: 100%; max-width: 420px; overflow: hidden; 
         }
         
         .mac-header { background: rgba(246, 248, 250, 0.5); padding: 12px 16px; display: flex; align-items: center; border-bottom: 2px solid rgba(225, 228, 232, 0.5); position: relative; }
@@ -95,7 +85,6 @@
         .badge-heart { width: 40px; height: auto; z-index: 2; }
         @keyframes spinBadge { 100% { transform: rotate(360deg); } }
 
-        /* ----- TIÊU ĐỀ ----- */
         h1 { font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 26px; font-weight: 900; color: #1f2328; margin-bottom: 2px; letter-spacing: -0.5px; }
         p.subtitle { font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15px; font-weight: 700; color: #6e7781; margin-bottom: 20px; line-height: 1.4; }
         
@@ -104,7 +93,34 @@
         input { width: 100%; padding: 14px 14px; background: rgba(255, 255, 255, 0.85); border: 2px solid #d0d7de; border-radius: 10px; color: #1f2328; font-size: 14px; outline: none; transition: border-color 0.2s; }
         input:focus { border-color: #FFB400; }
 
-        /* ----- STYLE CỦA KHUNG NHẬP KEY & NÚT ----- */
+        /* ----- NÚT POPUP HƯỚNG DẪN LẤY LINK ----- */
+        .help-link {
+            font-size: 11.5px; color: #0969da; margin-top: 6px; text-align: right; 
+            cursor: pointer; text-decoration: underline; font-family: 'Nunito', sans-serif; font-weight: 800;
+        }
+        .help-link:hover { color: #0550a6; }
+
+        /* ----- POPUP ẢNH ----- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75); z-index: 100; justify-content: center; align-items: center; padding: 20px;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: transparent; max-width: 380px; width: 100%; max-height: 85vh;
+            overflow-y: auto; position: relative; display: flex; flex-direction: column; gap: 12px;
+            border-radius: 12px;
+        }
+        .modal-content::-webkit-scrollbar { width: 0px; background: transparent; } /* Ẩn thanh cuộn */
+        .modal-content img { width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .close-btn {
+            position: absolute; top: -15px; right: -10px; font-size: 20px; font-weight: bold; color: #fff;
+            background: #cf222e; width: 32px; height: 32px; border-radius: 50%; border: 2px solid #fff;
+            display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 110;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4); font-family: sans-serif;
+        }
+
+        /* ----- STYLE NHẬP KEY ----- */
         .key-row { display: flex; gap: 8px; }
         .key-row input { flex: 1; }
         .btn-check { 
@@ -126,10 +142,7 @@
             background: #FFB400; color: #ffffff; cursor: pointer; display: flex; justify-content: center; align-items: center; 
             box-shadow: 0 8px 20px rgba(255, 180, 0, 0.4); transition: all 0.2s ease;
         }
-        .btn-submit span {
-            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif !important; 
-            font-size: 24px !important; font-weight: 900 !important; letter-spacing: 0.5px;
-        }
+        .btn-submit span { font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif !important; font-size: 24px !important; font-weight: 900 !important; letter-spacing: 0.5px; }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255, 180, 0, 0.5); }
         .btn-submit:active { transform: translateY(2px); }
         .btn-submit:disabled { background: #ffdb80; border-color: #f8f9fa; box-shadow: none; cursor: not-allowed; transform: none; }
@@ -161,7 +174,7 @@
 </head>
 <body>
 
-    <!-- STICKERS (Sẽ nằm sau khung nhờ z-index: 5) -->
+    <!-- STICKERS -->
     <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-gold-heart.png" class="sticker stk-1" alt="Sticker">
     <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-smiling-hearts.png" class="sticker stk-2" alt="Sticker">
     <img src="https://creators.locket.com/assets/ambassadors/bits/i-heart-locket.png" class="sticker stk-3" alt="Sticker">
@@ -187,6 +200,18 @@
     <img src="https://creators.locket.com/assets/ambassadors/bits/emoji-gold-heart.png" class="sticker stk-23" alt="Sticker">
     <img src="https://creators.locket.com/assets/ambassadors/bits/pill-music.png" class="sticker stk-24" alt="Sticker">
     <img src="https://creators.locket.com/assets/ambassadors/bits/icon-ring.png" class="sticker stk-25" alt="Sticker">
+
+    <!-- MODAL POPUP HƯỚNG DẪN ẢNH -->
+    <div id="imageModal" class="modal-overlay" onclick="closeModal(event)">
+        <!-- Phần nội dung cuộn được -->
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="close-btn" onclick="closeModal()">&times;</div>
+            <!-- BẠN THAY 3 ĐƯỜNG LINK ẢNH NÀY BẰNG ẢNH THẬT NHÉ -->
+            <img src="link_anh_1.jpg" alt="Bước 1">
+            <img src="link_anh_2.jpg" alt="Bước 2">
+            <img src="link_anh_3.jpg" alt="Bước 3">
+        </div>
+    </div>
 
     <div class="mac-window">
         <div class="mac-header">
@@ -215,16 +240,17 @@
                 <div class="input-group">
                     <label class="input-label" for="username" style="color: #cf222e;">$ Nhập locket link (Bắt buộc):</label>
                     <input type="text" id="username" placeholder="Vd: https://locket.cam/darwjen" autocomplete="off">
+                    <!-- NÚT BẤM HIỂN THỊ HƯỚNG DẪN LẤY LINK -->
+                    <div class="help-link" onclick="openModal()">Không biết lấy link? Hãy xem cách lấy</div>
                 </div>
 
-                <!-- PHẦN NHẬP KEY & NÚT KIỂM TRA ĐƯỢC CHỈNH SỬA -->
                 <div class="input-group">
                     <label class="input-label" for="vipKey" style="color: #2ea44f;">🔑 $ Nhập key (Nếu có):</label>
                     <div class="key-row">
                         <input type="text" id="vipKey" placeholder="Ví dụ: KEY30" autocomplete="off">
                         <button type="button" class="btn-check" onclick="applyKey()">Kiểm tra</button>
                     </div>
-                    <div id="keyMessage"></div> <!-- Chỗ hiện thông báo Key -->
+                    <div id="keyMessage"></div>
                 </div>
 
                 <div class="price-tag-box">
@@ -274,6 +300,17 @@ const BANK_ID = "BIDV", ACCOUNT_NO = "8858349181", ACCOUNT_NAME = "DUC KIEN", SE
 
 window.addEventListener('pageshow', function(event) { resetOrder(); });
 
+// ----- HÀM MỞ/ĐÓNG POPUP ẢNH -----
+function openModal() {
+    document.getElementById('imageModal').style.display = 'flex';
+}
+function closeModal(e) {
+    if (e === undefined || e.target.id === 'imageModal' || e.currentTarget.className === 'close-btn') {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+}
+// ---------------------------------
+
 function extractUsername(input) {
     let cleanStr = input.trim();
     if (cleanStr.endsWith('/')) cleanStr = cleanStr.slice(0, -1);
@@ -284,10 +321,8 @@ function applyKey() {
     const rawKey = document.getElementById('vipKey').value.trim();
     const msgEl = document.getElementById('keyMessage');
     
-    // NẾU Ô TRỐNG MÀ BẤM KIỂM TRA
     if (!rawKey) {
-        msgEl.style.display = 'block';
-        msgEl.style.color = '#cf222e';
+        msgEl.style.display = 'block'; msgEl.style.color = '#cf222e';
         msgEl.innerText = '❌ Vui lòng nhập mã Key để kiểm tra!';
         currentPrice = 15000;
         document.getElementById('displayPrice').innerText = "15.000 VNĐ";
@@ -295,11 +330,9 @@ function applyKey() {
         return;
     }
 
-    msgEl.style.display = 'block';
-    msgEl.style.color = '#57606a';
+    msgEl.style.display = 'block'; msgEl.style.color = '#57606a';
     msgEl.innerText = '⏳ Đang kiểm tra mã Key...';
 
-    // KIỂM TRA TỪ API CỦA SERVER
     fetch(`${SERVER_URL}/check-key`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -309,17 +342,14 @@ function applyKey() {
     .then(data => {
         if (data.success) {
             currentPrice = data.price;
-            // CHỈ HIỂN THỊ THÀNH CÔNG, KHÔNG HIỂN THỊ SỐ NGÀY!
             msgEl.style.color = '#1a7f37';
             msgEl.innerText = '✅ Mã kích hoạt hợp lệ!';
-            
             document.getElementById('displayPrice').innerText = `${data.price.toLocaleString('vi-VN')} VNĐ`;
             document.getElementById('btnSubmit').querySelector('span').innerText = data.price === 0 ? "Apply! (Key Free)" : "Apply!";
         } else {
             currentPrice = 15000;
             msgEl.style.color = '#cf222e';
             msgEl.innerText = '❌ ' + (data.message || 'Mã không hợp lệ!');
-            
             document.getElementById('displayPrice').innerText = "15.000 VNĐ";
             document.getElementById('btnSubmit').querySelector('span').innerText = "Apply!";
         }
@@ -332,7 +362,7 @@ function applyKey() {
 
 function submitOrder() {
     const rawInput = document.getElementById('username').value.trim().toLowerCase();
-    const appliedKey = document.getElementById('vipKey').value.trim(); // LẤY KEY GỬI LÊN KHI TẠO ĐƠN
+    const appliedKey = document.getElementById('vipKey').value.trim();
 
     if (!rawInput.includes("locket.cam/")) {
         alert("Vui lòng dán chính xác Link Locket!");
@@ -343,7 +373,6 @@ function submitOrder() {
     const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = true;
 
-    // GỬI KÈM BIẾN `key` LÊN SERVER
     fetch(`${SERVER_URL}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -358,7 +387,6 @@ function submitOrder() {
     .then(data => {
         if (data.success) {
             currentOrderId = data.order_id;
-            // NẾU GIÁ 0 ĐỒNG -> CHO VÀO THẲNG LẤY PROFILE KHÔNG CẦN CHUYỂN KHOẢN
             if (data.auto_approved) {
                 document.getElementById('formSection').style.display = 'none';
                 document.getElementById('qrSection').style.display = 'block';
